@@ -1,4 +1,5 @@
-import { Actor, Color, Engine, vec } from 'excalibur';
+import { Color, Engine } from 'excalibur';
+import makeTestScene from './testScene';
 
 const game = new Engine({
   backgroundColor: Color.White,
@@ -6,21 +7,11 @@ const game = new Engine({
   suppressConsoleBootMessage: true,
 });
 
-const srBay = new Actor({
-  x: 80,
-  y: 80,
-  width: 28,
-  height: 28,
-  color: Color.fromHex('dbc751'),
-});
-
-game.add(srBay);
-game.currentScene.camera.pos.setTo(100, 100);
-game.currentScene.camera.zoom(2);
+const testScene = makeTestScene(game);
+game.addScene('testScene', testScene);
+game.goToScene('testScene');
 
 // export function to start game.
 export default async () => {
   await game.start();
-  game.canvas.style.border = 'solid 1px #ccc';
-  game.canvas.style.borderRadius = '4px';
 };
