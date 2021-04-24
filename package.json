@@ -1,0 +1,21 @@
+{
+  "name": "warehouse-sim-2021",
+  "version": "1.0.0",
+  "description": "warehouse simulator game",
+  "scripts": {
+    "dev": "parcel src/index.html --target main --cache-dir build/cache --dist-dir build/debug"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "excalibur": "^0.24.5",
+    "parcel": "^2.0.0-beta.2"
+  },
+  "targets": {
+    "main": {
+      "sourceMap": {
+        "inline": true
+      }
+    }
+  }
+}
