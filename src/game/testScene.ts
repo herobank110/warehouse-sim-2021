@@ -2,6 +2,7 @@ import { Scene, Engine, Actor, Color, Label, vec, TextAlign } from 'excalibur';
 import { tileCoords, zero } from '../utils/vector';
 
 export default (game: Engine) => {
+  game.input.pointers.at(0).on('move', e => console.log(e));
   const scene = new Scene(game);
   [
     new Actor({

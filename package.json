@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "warehouse simulator game",
   "scripts": {
-    "dev": "parcel src/index.html --target main --cache-dir build/cache --dist-dir build/debug"
+    "build-debug": "parcel src/index.html --target debug --cache-dir build/cache --dist-dir build/debug",
+    "build-release": "parcel build src/index.html --target release --cache-dir build/cache --dist-dir build"
   },
   "author": "",
   "license": "ISC",
@@ -16,10 +17,14 @@
     "url": "https://github.com/herobank110/warehouse-sim-2021.git"
   },
   "targets": {
-    "main": {
+    "debug": {
       "sourceMap": {
         "inline": true
       }
+    },
+    "release": {
+      "sourceMap": false,
+      "publicUrl": "./"
     }
   },
   "devDependencies": {
