@@ -8,9 +8,4 @@ export type TileIndex = `(${TileIndexImpl}, ${TileIndexImpl})`;
 export class World {
   public tiles = <Record<TileIndex, Tile | undefined>>{};
   public units = <Record<TileIndex, Tile | undefined>>{};
-
-  public static tileCoords(tile: TileIndex | Vector) {
-    tile = toVec(tile);
-    return tile.clone().scaleEqual(28).addEqual(vec(50, 80));
-  }
 }
