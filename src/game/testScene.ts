@@ -12,14 +12,11 @@ import { R } from '../utils';
 import { tileCoords, zero } from '../utils/vector';
 
 let idleForklifts = 2;
-let runningForklifts = <
-  {
-    actor: Actor;
-    item: Actor;
-  }[]
->[];
+type Forklift = { actor: Actor; item: Actor };
+let runningForklifts = <Forklift[]>[];
 
 type RouteNode = { actor: Actor; items: Actor[] };
+type Route = RouteNode[];
 
 let dragFrom: Actor | undefined;
 function startDrag(from: Actor) {
@@ -29,25 +26,30 @@ function startDrag(from: Actor) {
 function endDrag(to: Actor) {
   if (dragFrom == scenery[0]) {
     dispatchForklift([
-      { actor: dragFrom, items: [] },
+      { actor: dragFrom, items: [...items] },
       { actor: to, items: [] },
     ]);
   }
   dragFrom = undefined;
 }
 
-function dispatchForklift(route: RouteNode[]) {
+function dispatchForklift(route: Route) {
   if (idleForklifts >= 1) {
+    const item = route[0].items.shift();
+    if (!item) {
+      return;
+    }
+
     idleForklifts--;
-    const a = new Actor({
+    const actor = new Actor({
       pos: route[0].actor.pos.add(vec(14, 14)),
       width: 8,
       height: 3,
       color: Color.Red,
     });
-    a.actions.moveTo(route[1].actor.pos.x + 14, route[1].actor.pos.y + 14, 10);
-    warehouseGlobals.game.add(a);
-    runningForklifts.push({ actor: a, item: null });
+    actor.actions.moveTo(route[1].actor.pos.x + 14, route[1].actor.pos.y + 14, 10);
+    warehouseGlobals.game.add(actor);
+    runningForklifts.push({ actor, item });
   }
 }
 
