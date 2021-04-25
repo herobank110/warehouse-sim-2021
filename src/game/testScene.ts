@@ -1,5 +1,5 @@
 import { Scene, Engine, Actor, Color, Label, vec, TextAlign } from 'excalibur';
-import { tileCoords, Zero as zero } from '../utils/vector';
+import { tileCoords, zero } from '../utils/vector';
 
 export default (game: Engine) => {
   const scene = new Scene(game);

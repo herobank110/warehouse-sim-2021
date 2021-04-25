@@ -13,4 +13,4 @@ export function tileCoords(tile: TileIndex | Vector) {
   return toVec(tile).clone().scaleEqual(29).addEqual(vec(70, 50));
 }
 
-export const Zero = () => vec(0, 0);
+export const zero = () => vec(0, 0);
