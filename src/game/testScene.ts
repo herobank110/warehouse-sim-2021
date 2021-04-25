@@ -8,6 +8,7 @@ export default (game: Engine) => {
   game.input.pointers
     .at(0)
     .on('down', e => console.log(e.button + ' mouse button down'));
+
   const scene = new Scene(game);
   [
     new Actor({
@@ -17,8 +18,6 @@ export default (game: Engine) => {
       color: Color.fromHex('dbc751'),
       anchor: zero(),
     }),
-    // new Label({ text: 'S&R', x: 80, y: 80, textAlign: TextAlign.Center }),
-    // new Label({ text: 'bay', x: 80, y: 90, textAlign: TextAlign.Center }),
     new Actor({
       pos: tileCoords(vec(0, 1)),
       width: 14,
@@ -26,8 +25,6 @@ export default (game: Engine) => {
       color: Color.fromHex('51b6db'),
       anchor: zero(),
     }),
-    // new Label({ text: 'de', x: 80, y: 109, textAlign: TextAlign.Center }),
-    // new Label({ text: 'pot', x: 80, y: 119, textAlign: TextAlign.Center }),
     new Actor({
       pos: tileCoords(vec(1, 0)),
       width: 28,
@@ -42,8 +39,6 @@ export default (game: Engine) => {
       color: Color.fromHex('afafaf'),
       anchor: zero(),
     }),
-    // new Label({ text: 'de', x: 80, y: 109, textAlign: TextAlign.Center }),
-    // new Label({ text: 'pot', x: 80, y: 119, textAlign: TextAlign.Center }),
   ].map(s => scene.add(s));
 
   scene.camera.pos.setTo(100, 100);
