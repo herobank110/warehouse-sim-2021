@@ -6,6 +6,7 @@ export default class extends Engine {
       backgroundColor: Color.White,
       viewport: { width: 400, height: 400 },
       suppressConsoleBootMessage: true,
+      antialiasing: false,
     });
   }
 }
