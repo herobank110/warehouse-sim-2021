@@ -110,13 +110,11 @@ const items = [
 const scenery = [
   new Actor({
     pos: tileCoords(vec(0, 0)),
-    width: 28,
-    height: 14,
-    // anchor: vec(0.5, 1),
-    // rotation: Math.PI / -2,
+    width: 14,
+    height: 28,
     color: Color.fromHex('dbc751'),
-    // is this necessary!?!?!
-    // enableCapturePointer: true,
+    anchor: zero(),
+    enableCapturePointer: true,
   }),
   // no depot for now
   // new Actor({
@@ -131,14 +129,14 @@ const scenery = [
     width: 28,
     height: 14,
     color: Color.fromHex('afafaf'),
-    // anchor: zero(),
+    anchor: zero(),
   }),
   new Actor({
     pos: tileCoords(vec(1, 1)),
     width: 28,
     height: 14,
     color: Color.fromHex('afafaf'),
-    // anchor: zero(),
+    anchor: zero(),
   }),
 ];
 
