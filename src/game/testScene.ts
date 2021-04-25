@@ -24,11 +24,9 @@ function startDrag(from: Actor) {
 }
 
 function endDrag(to: Actor) {
-  if (dragFrom == scenery[0]) {
-    dispatchForklift([
-      { actor: dragFrom, items: [...items] },
-      { actor: to, items: [] },
-    ]);
+  if (dragFrom == srBay.actor) {
+    const toShelf = to == shelf1.actor ? shelf1 : shelf2;
+    dispatchForklift([srBay, toShelf]);
   }
   dragFrom = undefined;
 }
@@ -47,7 +45,12 @@ function dispatchForklift(route: Route) {
       height: 3,
       color: Color.Red,
     });
-    actor.actions.moveTo(route[1].actor.pos.x + 14, route[1].actor.pos.y + 14, 10);
+    item.visible = false;
+    actor.actions.moveTo(
+      route[1].actor.pos.x + 14,
+      route[1].actor.pos.y + 14,
+      10,
+    );
     warehouseGlobals.game.add(actor);
     runningForklifts.push({ actor, item });
   }
@@ -105,6 +108,10 @@ const scenery = [
     anchor: zero(),
   }),
 ];
+
+const srBay = <RouteNode>{ actor: scenery[0], items: [...items] };
+const shelf1 = <RouteNode>{ actor: scenery[1], items: [] };
+const shelf2 = <RouteNode>{ actor: scenery[2], items: [] };
 
 export default (game: Engine) => {
   // game.input.pointers.primary.on('move', e => {});
