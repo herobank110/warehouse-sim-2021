@@ -1,16 +1,54 @@
-import { Scene, Engine, Actor, Color, vec, Sprite } from 'excalibur';
+import {
+  Scene,
+  Engine,
+  Actor,
+  Color,
+  vec,
+  Sprite,
+  ActionContext,
+} from 'excalibur';
+import { warehouseGlobals } from '../globals';
 import { R } from '../utils';
 import { tileCoords, zero } from '../utils/vector';
+
+let idleForklifts = 2;
+let runningForklifts = <
+  {
+    actor: Actor;
+    item: Actor;
+  }[]
+>[];
+
+type RouteNode = { actor: Actor; items: Actor[] };
 
 let dragFrom: Actor | undefined;
 function startDrag(from: Actor) {
   dragFrom = from;
 }
+
 function endDrag(to: Actor) {
   if (dragFrom == scenery[0]) {
-    console.log(`${dragFrom.id} -> ${to.id}`);
+    dispatchForklift([
+      { actor: dragFrom, items: [] },
+      { actor: to, items: [] },
+    ]);
   }
   dragFrom = undefined;
+}
+
+function dispatchForklift(route: RouteNode[]) {
+  if (idleForklifts >= 1) {
+    idleForklifts--;
+    const a = new Actor({
+      pos: route[0].actor.pos.add(vec(14, 14)),
+      width: 8,
+      height: 3,
+      color: Color.Red,
+    });
+    a.actions.moveTo(route[1].actor.pos.x + 14, route[1].actor.pos.y + 14, 10);
+    warehouseGlobals.game.add(a);
+    runningForklifts.push({ actor: a, item: null });
+  }
 }
 
 // box, box, triangle
