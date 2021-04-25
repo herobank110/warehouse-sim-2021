@@ -8,7 +8,7 @@ function startDrag(from: Actor) {
 }
 function endDrag(to: Actor) {
   if (dragFrom == scenery[0]) {
-    console.log(dragFrom.id, '->', to.id);
+    console.log(`${dragFrom.id} -> ${to.id}`);
   }
   dragFrom = undefined;
 }
