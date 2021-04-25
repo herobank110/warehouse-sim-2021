@@ -1,7 +1,6 @@
 import { Color, Engine } from 'excalibur';
-import makeTestScene from './testScene';
-import { World } from './world';
-let w = new World()
+import testScene from './testScene';
+import warehouseScene from './warehouseScene';
 
 const game = new Engine({
   backgroundColor: Color.White,
@@ -9,9 +8,9 @@ const game = new Engine({
   suppressConsoleBootMessage: true,
 });
 
-const testScene = makeTestScene(game);
-game.addScene('testScene', testScene);
-game.goToScene('testScene');
+game.addScene('test', testScene(game));
+game.addScene('warehouse', warehouseScene(game));
+game.goToScene('warehouse');
 
 // export function to start game.
 export default async () => {
