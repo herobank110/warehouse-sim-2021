@@ -8,7 +8,7 @@ function startDrag(from: Actor) {
 }
 function endDrag(to: Actor) {
   if (dragFrom == scenery[0]) {
-    console.log('hi');
+    console.log(dragFrom.id, '->', to.id);
   }
   dragFrom = undefined;
 }
@@ -74,7 +74,9 @@ export default (game: Engine) => {
 
   [...scenery, ...items].map(i => scene.add(i));
 
-  scenery[0].on('pointerdown', e => console.log(e));
+  scenery[0].on('pointerdown', e => startDrag(e.target));
+  scenery[1].on('pointerup', e => endDrag(e.target));
+  scenery[2].on('pointerup', e => endDrag(e.target));
 
   scene.camera.pos.setTo(100, 100);
   scene.camera.zoom(2);
