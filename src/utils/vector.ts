@@ -4,7 +4,14 @@ import { TileIndex } from '../game/world';
 /** Convert to Vector object. Same ref is already a vector. */
 export function toVec(tile: TileIndex | Vector) {
   return typeof tile == 'string'
-    ? vec(...(tile.toString().split(',').map(Number) as [number, number]))
+    ? vec(
+        ...(tile
+          .toString()
+          .replace('(', '')
+          .replace(')', '')
+          .split(',')
+          .map(Number) as [number, number]),
+      )
     : tile;
 }
 
