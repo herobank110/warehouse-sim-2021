@@ -7,14 +7,12 @@ export default (game: Engine) => {
   const w = new World();
 
   const a = new Actor({
-    pos: tileCoords('(0, 0)'),
+    pos: tileCoords(vec(0, 0)),
     currentDrawing: new Sprite(R.texture.srBay, 0, 0, 28, 28),
-    width: 28,
+    width: 14,
     height: 28,
-    color: Color.Red,
     anchor: zero(),
   });
-  scene.add(a);
 
   w.tiles['(0, 0)'] = {
     actor: a,
