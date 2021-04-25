@@ -4,7 +4,8 @@ import { R } from '../utils';
 import { tileCoords, zero } from '../utils/vector';
 
 let idleForklifts = 2;
-type Forklift = { actor: Actor; item: Actor };
+type Forklift = { actor: Actor; item?: Actor };
+type ForkliftRunning = { forklift: Forklift; route: Route };
 let runningForklifts = <ForkliftRunning[]>[];
 
 type RouteNode = { actor: Actor; items: Actor[] };
@@ -29,7 +30,7 @@ function dispatchForklift(route: Route) {
   const item = route[0].items.shift();
   if (!item) return;
 
-  // create forklift
+  // spawn a forklift
   const actor = new Actor({
     pos: route[0].actor.pos.add(vec(14, 14)),
     width: 8,
@@ -39,31 +40,50 @@ function dispatchForklift(route: Route) {
   warehouseGlobals.game.add(actor);
   idleForklifts--;
 
-  // create running forklift context
-  item.visible = false;
+  // onwards to destination
   const ctx: ForkliftRunning = { forklift: { actor, item }, route };
   runningForklifts.push(ctx);
-
-  // onwards to destination
-  actor.actions
-    .moveTo(route[1].actor.pos.x + 14, route[1].actor.pos.y + 14, 10)
-    .callMethod(() => unloadForklift(ctx));
+  scheduleForklift(ctx);
+  item.visible = false;
+  return ctx;
 }
 
-type ForkliftRunning = { forklift: Forklift; route: Route };
-function unloadForklift(ctx: ForkliftRunning) {
-  console.log('hi');
+function organizeItems(node: RouteNode) {
+  node.items.map((item, i) => {
+    // TODO: reposition items based on actor rotation
+    item.pos = node.actor.pos.add(vec(2 + i * 8, 2));
+    item.visible = true; // just to be sure!
+  });
+}
 
+function unloadForklift(ctx: ForkliftRunning) {
+  if (!ctx.forklift.item) throw new Error('Cannot unload empty forklift');
+  const item = ctx.forklift.item;
+  ctx.route[1].items.push(item);
+  ctx.forklift.item = undefined;
+  organizeItems(ctx.route[1]);
   scheduleForklift(ctx);
 }
 
+function noItemsToPickup(route: Route) {
+  return route[0]?.items.length == 0 ?? false;
+}
+
 function scheduleForklift(ctx: ForkliftRunning) {
-  if (ctx.route[0].items.length == 0) {
-    // No more items to go pick up.
+  if (ctx.forklift.item) {
+    // take to destination
+    ctx.forklift.actor.actions
+      .moveTo(ctx.route[1].actor.pos.x + 14, ctx.route[1].actor.pos.y + 14, 10)
+      .callMethod(() => unloadForklift(ctx));
+  } else if (noItemsToPickup(ctx.route)) {
     ctx.forklift.actor.kill();
     idleForklifts++;
   } else {
-    // TODO: Go pick up the item at the bay or die if reached and it has become empty.
+    ctx.forklift.actor.actions
+      .moveTo(ctx.route[0].actor.pos.x + 14, ctx.route[0].actor.pos.y + 14, 10)
+      .callMethod(() => {
+        // TODO: pick up item at bay or die it has become empty
+      });
   }
 }
 
