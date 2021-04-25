@@ -1,12 +1,4 @@
-import {
-  Actor,
-  Color,
-  Engine,
-  HiddenEvent,
-  Scene,
-  Sprite,
-  vec,
-} from 'excalibur';
+import { Actor, Color, Engine, Scene, Sprite, vec } from 'excalibur';
 import { R, tileCoords, zero } from '../utils';
 import { World } from './world';
 
