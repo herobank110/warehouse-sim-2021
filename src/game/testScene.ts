@@ -5,7 +5,7 @@ import { tileCoords, zero } from '../utils/vector';
 
 let idleForklifts = 2;
 type Forklift = { actor: Actor; item: Actor };
-let runningForklifts = <Forklift[]>[];
+let runningForklifts = <ForkliftRunning[]>[];
 
 type RouteNode = { actor: Actor; items: Actor[] };
 type Route = RouteNode[];
@@ -24,27 +24,46 @@ function endDrag(to: Actor) {
 }
 
 function dispatchForklift(route: Route) {
-  if (idleForklifts >= 1) {
-    const item = route[0].items.shift();
-    if (!item) {
-      return;
-    }
+  if (idleForklifts == 0) return;
 
-    idleForklifts--;
-    const actor = new Actor({
-      pos: route[0].actor.pos.add(vec(14, 14)),
-      width: 8,
-      height: 3,
-      color: Color.Red,
-    });
-    item.visible = false;
-    actor.actions.moveTo(
-      route[1].actor.pos.x + 14,
-      route[1].actor.pos.y + 14,
-      10,
-    );
-    warehouseGlobals.game.add(actor);
-    runningForklifts.push({ actor, item });
+  const item = route[0].items.shift();
+  if (!item) return;
+
+  // create forklift
+  const actor = new Actor({
+    pos: route[0].actor.pos.add(vec(14, 14)),
+    width: 8,
+    height: 3,
+    color: Color.Red,
+  });
+  warehouseGlobals.game.add(actor);
+  idleForklifts--;
+
+  // create running forklift context
+  item.visible = false;
+  const ctx: ForkliftRunning = { forklift: { actor, item }, route };
+  runningForklifts.push(ctx);
+
+  // onwards to destination
+  actor.actions
+    .moveTo(route[1].actor.pos.x + 14, route[1].actor.pos.y + 14, 10)
+    .callMethod(() => unloadForklift(ctx));
+}
+
+type ForkliftRunning = { forklift: Forklift; route: Route };
+function unloadForklift(ctx: ForkliftRunning) {
+  console.log('hi');
+
+  scheduleForklift(ctx);
+}
+
+function scheduleForklift(ctx: ForkliftRunning) {
+  if (ctx.route[0].items.length == 0) {
+    // No more items to go pick up.
+    ctx.forklift.actor.kill();
+    idleForklifts++;
+  } else {
+    // TODO: Go pick up the item at the bay or die if reached and it has become empty.
   }
 }
 
