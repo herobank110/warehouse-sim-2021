@@ -1,8 +1,5 @@
 import { Scene, Engine, Actor, Color, Label, vec, TextAlign } from 'excalibur';
-import { tileCoords } from '../utils/vector';
-import { World } from './world';
-
-const Zero = () => vec(0, 0);
+import { tileCoords, Zero as zero } from '../utils/vector';
 
 export default (game: Engine) => {
   const scene = new Scene(game);
@@ -12,7 +9,7 @@ export default (game: Engine) => {
       width: 14,
       height: 28,
       color: Color.fromHex('dbc751'),
-      anchor: Zero(),
+      anchor: zero(),
     }),
     // new Label({ text: 'S&R', x: 80, y: 80, textAlign: TextAlign.Center }),
     // new Label({ text: 'bay', x: 80, y: 90, textAlign: TextAlign.Center }),
@@ -21,7 +18,7 @@ export default (game: Engine) => {
       width: 14,
       height: 28,
       color: Color.fromHex('51b6db'),
-      anchor: Zero(),
+      anchor: zero(),
     }),
     // new Label({ text: 'de', x: 80, y: 109, textAlign: TextAlign.Center }),
     // new Label({ text: 'pot', x: 80, y: 119, textAlign: TextAlign.Center }),
@@ -30,14 +27,14 @@ export default (game: Engine) => {
       width: 28,
       height: 14,
       color: Color.fromHex('afafaf'),
-      anchor: Zero(),
+      anchor: zero(),
     }),
     new Actor({
       pos: tileCoords(vec(1, 1)),
       width: 28,
       height: 14,
       color: Color.fromHex('afafaf'),
-      anchor: Zero(),
+      anchor: zero(),
     }),
     // new Label({ text: 'de', x: 80, y: 109, textAlign: TextAlign.Center }),
     // new Label({ text: 'pot', x: 80, y: 119, textAlign: TextAlign.Center }),

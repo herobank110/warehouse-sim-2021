@@ -10,5 +10,7 @@ export function toVec(tile: TileIndex | Vector) {
 
 /** @returns top left world pos of tile */
 export function tileCoords(tile: TileIndex | Vector) {
-  return toVec(tile).clone().scaleEqual(29).addEqual(vec(50, 80));
+  return toVec(tile).clone().scaleEqual(29).addEqual(vec(70, 50));
 }
+
+export const Zero = () => vec(0, 0);
