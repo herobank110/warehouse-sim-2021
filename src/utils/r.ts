@@ -1,7 +1,11 @@
 import { Texture } from 'excalibur';
+// @ts-ignore
 import truckUrl from 'url:../../res/truck.png';
+// @ts-ignore
 import srBayUrl from 'url:../../res/srBay.png';
+// @ts-ignore
 import squareUrl from 'url:../../res/square.png';
+// @ts-ignore
 import triangleUrl from 'url:../../res/triangle.png';
 
 export const R = {
