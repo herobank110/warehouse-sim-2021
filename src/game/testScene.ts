@@ -1,12 +1,4 @@
-import {
-  Scene,
-  Engine,
-  Actor,
-  Color,
-  vec,
-  Sprite,
-  ActionContext,
-} from 'excalibur';
+import { Scene, Engine, Actor, Color, vec, Sprite } from 'excalibur';
 import { warehouseGlobals } from '../globals';
 import { R } from '../utils';
 import { tileCoords, zero } from '../utils/vector';
