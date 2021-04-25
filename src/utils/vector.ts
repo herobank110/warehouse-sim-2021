@@ -1,13 +1,11 @@
 import { vec, Vector } from 'excalibur';
-import { TileIndex } from './world';
+import { TileIndex } from '../game/world';
 
 /** Convert to Vector object. Same ref is already a vector. */
-export function toVec(vec: TileIndex | Vector) {
-  return vec instanceof Vector
-    ? vec
-    : new Vector(
-        ...(vec.toString().split(',').map(Number) as [number, number]),
-      );
+export function toVec(tile: TileIndex | Vector) {
+  return typeof tile == 'string'
+    ? vec(...(tile.toString().split(',').map(Number) as [number, number]))
+    : tile;
 }
 
 /** @returns top left world pos of tile */

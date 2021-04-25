@@ -1,5 +1,5 @@
 import { Scene, Engine, Actor, Color, Label, vec, TextAlign } from 'excalibur';
-import { tileCoords } from './utils';
+import { tileCoords } from '../utils/vector';
 import { World } from './world';
 
 const Zero = () => vec(0, 0);

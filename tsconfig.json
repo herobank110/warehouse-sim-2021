@@ -3,6 +3,7 @@
     "strict": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "target": "ES2015"
+    "target": "ES2015",
+    "typeRoots": ["src/@types"]
   }
 }
