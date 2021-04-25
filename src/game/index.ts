@@ -1,5 +1,7 @@
 import { Color, Engine } from 'excalibur';
 import makeTestScene from './testScene';
+import { World } from './world';
+let w = new World()
 
 const game = new Engine({
   backgroundColor: Color.White,
