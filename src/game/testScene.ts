@@ -1,16 +1,13 @@
-import { Scene, Engine, Actor, Color, vec, Sprite } from 'excalibur';
+import { Scene, Engine, Actor, Color, vec } from 'excalibur';
 import { Square, Triangle } from '../actors/item';
 import { ESide, RouteNode, Shelf, SrBay } from '../actors/routeNode';
 import { warehouseGlobals } from '../globals';
-import { R } from '../utils';
-import { tilePos, zero } from '../utils/vector';
 
 let idleForklifts = 2;
 type Forklift = { actor: Actor; item?: Actor };
 type ForkliftRunning = { forklift: Forklift; route: Route };
 let runningForklifts = <ForkliftRunning[]>[];
 
-// type RouteNode = { actor: Actor; items: Actor[] };
 type Route = RouteNode[];
 
 let dragFrom: Actor | undefined;
@@ -45,10 +42,11 @@ function dispatchForklift(route: Route) {
 }
 
 function organizeItems(node: RouteNode) {
+  // reposition items based on actor rotation
+  const offset = vec([8, 0][node.side % 2], [0, 8][node.side % 2]);
   node.items.map((item, i) => {
-    // TODO: reposition items based on actor rotation
-    item.pos = node.pos.add(vec(2 + i * 8, 2));
-    item.visible = true; // just to be sure!
+    item.pos = node.pos.add(vec(2, 2)).add(offset.scale(i));
+    item.visible = true;
   });
 }
 
@@ -117,6 +115,7 @@ const scenery = [
 
 const srBay: RouteNode = scenery[0];
 srBay.items.push(...items);
+organizeItems(srBay);
 const shelf1: RouteNode = scenery[1];
 const shelf2: RouteNode = scenery[2];
 
