@@ -1,7 +1,7 @@
-import { Actor, Vector } from 'excalibur';
-import { tileCoords } from '../utils';
+import { Actor, Color, Engine, vec, Vector } from 'excalibur';
+import { tilePos, zero } from '../utils';
 
-enum Side {
+export enum ESide {
   top,
   right,
   bottom,
@@ -9,12 +9,18 @@ enum Side {
 }
 
 export class RouteNode extends Actor {
-  constructor(private routeNode: { tile: Vector; side: Side }) {
+  constructor(private routeNode: { tile: Vector; side: ESide }) {
     super({
-      // TODO: position in correct place for anchor .5 .5
-      pos: tileCoords(routeNode.tile),
+      // position in correct place for anchor (0, 0)
+      pos: tilePos(routeNode.tile).add(
+        vec(
+          routeNode.side == ESide.right ? 14 : 0,
+          routeNode.side == ESide.bottom ? 14 : 0,
+        ),
+      ),
       width: [28, 14][routeNode.side % 2],
       height: [14, 28][routeNode.side % 2],
+      anchor: zero(),
     });
   }
 
@@ -24,5 +30,19 @@ export class RouteNode extends Actor {
 
   public get side() {
     return this.routeNode.side;
+  }
+}
+
+export class SrBay extends RouteNode {
+  onInitialize(engine: Engine) {
+    super.onInitialize(engine);
+    this.color = Color.fromHex('dbc751');
+  }
+}
+
+export class Shelf extends RouteNode {
+  onInitialize(engine: Engine) {
+    super.onInitialize(engine);
+    this.color = Color.fromHex('afafaf');
   }
 }

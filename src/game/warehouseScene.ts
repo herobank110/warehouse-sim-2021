@@ -1,5 +1,5 @@
 import { Actor, Color, Engine, Scene, Sprite, vec } from 'excalibur';
-import { R, tileCoords, zero } from '../utils';
+import { R, tilePos, zero } from '../utils';
 import { World } from './world';
 
 export default (game: Engine) => {
@@ -7,7 +7,7 @@ export default (game: Engine) => {
   const w = new World();
 
   const a = new Actor({
-    pos: tileCoords(vec(0, 0)),
+    pos: tilePos(vec(0, 0)),
     currentDrawing: new Sprite(R.texture.srBay, 0, 0, 28, 28),
     width: 14,
     height: 28,

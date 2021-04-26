@@ -1,7 +1,8 @@
 import { Scene, Engine, Actor, Color, vec, Sprite } from 'excalibur';
+import { ESide, Shelf, SrBay } from '../actors/routeNode';
 import { warehouseGlobals } from '../globals';
 import { R } from '../utils';
-import { tileCoords, zero } from '../utils/vector';
+import { tilePos, zero } from '../utils/vector';
 
 let idleForklifts = 2;
 type Forklift = { actor: Actor; item?: Actor };
@@ -91,31 +92,24 @@ function scheduleForklift(ctx: ForkliftRunning) {
 const items = [
   new Actor({
     currentDrawing: new Sprite(R.texture.square, 0, 0, 7, 7),
-    pos: tileCoords(vec(0, 0)).add(vec(2, 2)),
+    pos: tilePos(vec(0, 0)).add(vec(2, 2)),
     anchor: zero(),
   }),
   new Actor({
     currentDrawing: new Sprite(R.texture.square, 0, 0, 7, 7),
-    pos: tileCoords(vec(0, 0)).add(vec(2, 10)),
+    pos: tilePos(vec(0, 0)).add(vec(2, 10)),
     anchor: zero(),
   }),
   new Actor({
     currentDrawing: new Sprite(R.texture.triangle, 0, 0, 7, 7),
-    pos: tileCoords(vec(0, 0)).add(vec(2, 18)),
+    pos: tilePos(vec(0, 0)).add(vec(2, 18)),
     anchor: zero(),
   }),
 ];
 
 // s/r, shelf1, shelf2
 const scenery = [
-  new Actor({
-    pos: tileCoords(vec(0, 0)),
-    width: 14,
-    height: 28,
-    color: Color.fromHex('dbc751'),
-    anchor: zero(),
-    enableCapturePointer: true,
-  }),
+  new SrBay({ tile: vec(0, 0), side: ESide.left }),
   // no depot for now
   // new Actor({
   //   pos: tileCoords(vec(0, 1)),
@@ -124,20 +118,8 @@ const scenery = [
   //   color: Color.fromHex('51b6db'),
   //   anchor: zero(),
   // }),
-  new Actor({
-    pos: tileCoords(vec(1, 0)),
-    width: 28,
-    height: 14,
-    color: Color.fromHex('afafaf'),
-    anchor: zero(),
-  }),
-  new Actor({
-    pos: tileCoords(vec(1, 1)),
-    width: 28,
-    height: 14,
-    color: Color.fromHex('afafaf'),
-    anchor: zero(),
-  }),
+  new Shelf({ tile: vec(1, 0), side: ESide.top }),
+  new Shelf({ tile: vec(1, 1), side: ESide.top }),
 ];
 
 const srBay = <RouteNode>{ actor: scenery[0], items: [...items] };
