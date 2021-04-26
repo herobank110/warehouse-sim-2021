@@ -1,5 +1,6 @@
 import { Actor, Color, Engine, vec, Vector } from 'excalibur';
 import { tilePos, zero } from '../utils';
+import { ITile } from './tile';
 
 export enum ESide {
   top,
@@ -8,7 +9,7 @@ export enum ESide {
   left,
 }
 
-export class RouteNode extends Actor {
+export class RouteNode extends Actor implements ITile {
   public items = <Actor[]>[];
 
   constructor(private routeNode: { tile: Vector; side: ESide }) {
