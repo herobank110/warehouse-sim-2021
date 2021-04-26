@@ -1,5 +1,5 @@
 import { Scene, Engine, Actor, Color, vec, Sprite } from 'excalibur';
-import { ESide, Shelf, SrBay } from '../actors/routeNode';
+import { RouteNode, ESide, Shelf, SrBay } from '../actors/routeNode';
 import { warehouseGlobals } from '../globals';
 import { R } from '../utils';
 import { tilePos, zero } from '../utils/vector';
@@ -9,8 +9,8 @@ type Forklift = { actor: Actor; item?: Actor };
 type ForkliftRunning = { forklift: Forklift; route: Route };
 let runningForklifts = <ForkliftRunning[]>[];
 
-type RouteNode_t = { actor: Actor; items: Actor[] };
-type Route = RouteNode_t[];
+// type RouteNode = { actor: Actor; items: Actor[] };
+type Route = RouteNode[];
 
 let dragFrom: Actor | undefined;
 function startDrag(from: Actor) {
@@ -18,8 +18,8 @@ function startDrag(from: Actor) {
 }
 
 function endDrag(to: Actor) {
-  if (dragFrom == srBay.actor) {
-    const toShelf = to == shelf1.actor ? shelf1 : shelf2;
+  if (dragFrom == srBay) {
+    const toShelf = to == shelf1 ? shelf1 : shelf2;
     dispatchForklift([srBay, toShelf]);
   }
   dragFrom = undefined;
@@ -33,7 +33,7 @@ function dispatchForklift(route: Route) {
 
   // spawn a forklift
   const actor = new Actor({
-    pos: route[0].actor.pos.add(vec(14, 14)),
+    pos: route[0].pos.add(vec(14, 14)),
     width: 8,
     height: 3,
     color: Color.Red,
@@ -49,10 +49,10 @@ function dispatchForklift(route: Route) {
   return ctx;
 }
 
-function organizeItems(node: RouteNode_t) {
+function organizeItems(node: RouteNode) {
   node.items.map((item, i) => {
     // TODO: reposition items based on actor rotation
-    item.pos = node.actor.pos.add(vec(2 + i * 8, 2));
+    item.pos = node.pos.add(vec(2 + i * 8, 2));
     item.visible = true; // just to be sure!
   });
 }
@@ -74,14 +74,14 @@ function scheduleForklift(ctx: ForkliftRunning) {
   if (ctx.forklift.item) {
     // take to destination
     ctx.forklift.actor.actions
-      .moveTo(ctx.route[1].actor.pos.x + 14, ctx.route[1].actor.pos.y + 14, 10)
+      .moveTo(ctx.route[1].pos.x + 14, ctx.route[1].pos.y + 14, 10)
       .callMethod(() => unloadForklift(ctx));
   } else if (noItemsToPickup(ctx.route)) {
     ctx.forklift.actor.kill();
     idleForklifts++;
   } else {
     ctx.forklift.actor.actions
-      .moveTo(ctx.route[0].actor.pos.x + 14, ctx.route[0].actor.pos.y + 14, 10)
+      .moveTo(ctx.route[0].pos.x + 14, ctx.route[0].pos.y + 14, 10)
       .callMethod(() => {
         // TODO: pick up item at bay or die it has become empty
       });
@@ -122,9 +122,10 @@ const scenery = [
   new Shelf({ tile: vec(1, 1), side: ESide.top }),
 ];
 
-const srBay = <RouteNode_t>{ actor: scenery[0], items: [...items] };
-const shelf1 = <RouteNode_t>{ actor: scenery[1], items: [] };
-const shelf2 = <RouteNode_t>{ actor: scenery[2], items: [] };
+const srBay: RouteNode = scenery[0];
+srBay.items.push(...items);
+const shelf1: RouteNode = scenery[1];
+const shelf2: RouteNode = scenery[2];
 
 export default (game: Engine) => {
   // game.input.pointers.primary.on('move', e => {});
@@ -134,9 +135,9 @@ export default (game: Engine) => {
 
   [...scenery, ...items].map(i => scene.add(i));
 
-  scenery[0].on('pointerdown', e => startDrag(e.target));
-  scenery[1].on('pointerup', e => endDrag(e.target));
-  scenery[2].on('pointerup', e => endDrag(e.target));
+  srBay.on('pointerdown', e => startDrag(e.target));
+  shelf1.on('pointerup', e => endDrag(e.target));
+  shelf2.on('pointerup', e => endDrag(e.target));
 
   scene.camera.pos.setTo(100, 100);
   scene.camera.zoom(2);
