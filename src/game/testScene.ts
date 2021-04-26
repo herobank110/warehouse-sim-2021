@@ -1,24 +1,36 @@
 import { Scene, Engine, Actor, Color, vec } from 'excalibur';
 import { Square, Triangle } from '../actors/item';
-import { ESide, RouteNode, Shelf, SrBay } from '../actors/routeNode';
+import {
+  BasicRouteNode,
+  ESide,
+  RouteNode,
+  Shelf,
+  SrBay,
+} from '../actors/routeNode';
 import { warehouseGlobals } from '../globals';
 
-let idleForklifts = 2;
+// TODO: make forklift class, make free functions member fn
 type Forklift = { actor: Actor; item?: Actor };
 type ForkliftRunning = { forklift: Forklift; route: Route };
-let runningForklifts = <ForkliftRunning[]>[];
 
 type Route = RouteNode[];
 
-let dragFrom: Actor | undefined;
+// game state
+let idleForklifts = 2;
+let dragFrom: RouteNode | undefined;
+const shelves: Shelf[] = [];
+const srBays: SrBay[] = [];
+let runningForklifts = <ForkliftRunning[]>[];
+
 function startDrag(from: Actor) {
-  dragFrom = from;
+  if (from instanceof BasicRouteNode) {
+    dragFrom = from;
+  }
 }
 
 function endDrag(to: Actor) {
-  if (dragFrom == srBay) {
-    const toShelf = to == shelf1 ? shelf1 : shelf2;
-    dispatchForklift([srBay, toShelf]);
+  if (dragFrom && to instanceof Shelf && shelves.includes(to)) {
+    dispatchForklift([dragFrom, to]);
   }
   dragFrom = undefined;
 }
@@ -97,39 +109,26 @@ function scheduleForklift(ctx: ForkliftRunning) {
   }
 }
 
-const items = [new Square(), new Square(), new Triangle()];
-
-const scenery = [
-  new SrBay({ tile: vec(0, 0), side: ESide.left }),
-  new Shelf({ tile: vec(1, 0), side: ESide.top }),
-  new Shelf({ tile: vec(1, 1), side: ESide.top }),
-  // no depot for now
-  // new Actor({
-  //   pos: tileCoords(vec(0, 1)),
-  //   width: 14,
-  //   height: 28,
-  //   color: Color.fromHex('51b6db'),
-  //   anchor: zero(),
-  // }),
-];
-
-const srBay: RouteNode = scenery[0];
-srBay.items.push(...items);
-organizeItems(srBay);
-const shelf1: RouteNode = scenery[1];
-const shelf2: RouteNode = scenery[2];
-
 export default (game: Engine) => {
   // game.input.pointers.primary.on('move', e => {});
   // game.input.pointers.primary.on('down', e => {});
 
   const scene = new Scene(game);
 
-  [...scenery, ...items].map(i => scene.add(i));
+  const items = [new Square(), new Square(), new Triangle()];
+  srBays.push(new SrBay({ tile: vec(0, 0), side: ESide.left }));
+  shelves.push(
+    new Shelf({ tile: vec(1, 0), side: ESide.top }),
+    new Shelf({ tile: vec(1, 1), side: ESide.top }),
+  );
 
-  srBay.on('pointerdown', e => startDrag(e.target));
-  shelf1.on('pointerup', e => endDrag(e.target));
-  shelf2.on('pointerup', e => endDrag(e.target));
+  srBays[0].items.push(...items);
+  organizeItems(srBays[0]);
+
+  srBays.map(s => s.on('pointerdown', e => startDrag(e.target)));
+  shelves.map(s => s.on('pointerup', e => endDrag(e.target)));
+
+  [...srBays, ...shelves, ...items].map(i => scene.add(i));
 
   scene.camera.pos.setTo(100, 100);
   scene.camera.zoom(2);
