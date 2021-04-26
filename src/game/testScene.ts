@@ -1,5 +1,5 @@
 import { Scene, Engine, Actor, Color, vec, Sprite } from 'excalibur';
-import { RouteNode, ESide, Shelf, SrBay } from '../actors/routeNode';
+import { ESide, RouteNode, Shelf, SrBay } from '../actors/routeNode';
 import { warehouseGlobals } from '../globals';
 import { R } from '../utils';
 import { tilePos, zero } from '../utils/vector';

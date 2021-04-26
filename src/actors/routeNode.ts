@@ -9,7 +9,7 @@ export enum ESide {
   left,
 }
 
-export class RouteNode extends Actor implements ITile {
+export class BasicRouteNode extends Actor implements ITile {
   public items = <Actor[]>[];
 
   constructor(private routeNode: { tile: Vector; side: ESide }) {
@@ -36,16 +36,18 @@ export class RouteNode extends Actor implements ITile {
   }
 }
 
-export class SrBay extends RouteNode {
+export class SrBay extends BasicRouteNode {
   onInitialize(engine: Engine) {
     super.onInitialize(engine);
     this.color = Color.fromHex('dbc751');
   }
 }
 
-export class Shelf extends RouteNode {
+export class Shelf extends BasicRouteNode {
   onInitialize(engine: Engine) {
     super.onInitialize(engine);
     this.color = Color.fromHex('afafaf');
   }
 }
+
+export type RouteNode = SrBay | Shelf;
