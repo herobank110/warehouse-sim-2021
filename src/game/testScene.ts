@@ -40,13 +40,7 @@ function dispatchForklift(route: Route) {
   });
   warehouseGlobals.game.add(actor);
   idleForklifts--;
-
-  // onwards to destination
-  const ctx: ForkliftRunning = { forklift: { actor, item }, route };
-  runningForklifts.push(ctx);
-  scheduleForklift(ctx);
-  item.visible = false;
-  return ctx;
+  return runRoute({ actor }, item, route);
 }
 
 function organizeItems(node: RouteNode) {
@@ -55,6 +49,16 @@ function organizeItems(node: RouteNode) {
     item.pos = node.pos.add(vec(2 + i * 8, 2));
     item.visible = true; // just to be sure!
   });
+}
+
+/** Assumes he's already at the first point in the route. */
+function runRoute(forklift: Forklift, item: Actor, route: Route) {
+  forklift.item = item;
+  const ctx: ForkliftRunning = { forklift, route };
+  runningForklifts.push(ctx);
+  scheduleForklift(ctx);
+  item.visible = false;
+  return ctx;
 }
 
 function unloadForklift(ctx: ForkliftRunning) {
@@ -83,7 +87,13 @@ function scheduleForklift(ctx: ForkliftRunning) {
     ctx.forklift.actor.actions
       .moveTo(ctx.route[0].pos.x + 14, ctx.route[0].pos.y + 14, 10)
       .callMethod(() => {
-        // TODO: pick up item at bay or die it has become empty
+        const item = ctx.route[0].items.shift();
+        if (!item) {
+          ctx.forklift.actor.kill();
+          return;
+        }
+        const newCtx = runRoute(ctx.forklift, item, ctx.route);
+        deregisterRunningForklift(ctx);
       });
   }
 }
@@ -144,3 +154,10 @@ export default (game: Engine) => {
 
   return scene;
 };
+
+function deregisterRunningForklift(ctx: ForkliftRunning) {
+  const index = runningForklifts.indexOf(ctx);
+  if (index != -1) {
+    runningForklifts.splice(index, 1);
+  }
+}
