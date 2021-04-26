@@ -9,8 +9,8 @@ type Forklift = { actor: Actor; item?: Actor };
 type ForkliftRunning = { forklift: Forklift; route: Route };
 let runningForklifts = <ForkliftRunning[]>[];
 
-type RouteNode = { actor: Actor; items: Actor[] };
-type Route = RouteNode[];
+type RouteNode_t = { actor: Actor; items: Actor[] };
+type Route = RouteNode_t[];
 
 let dragFrom: Actor | undefined;
 function startDrag(from: Actor) {
@@ -49,7 +49,7 @@ function dispatchForklift(route: Route) {
   return ctx;
 }
 
-function organizeItems(node: RouteNode) {
+function organizeItems(node: RouteNode_t) {
   node.items.map((item, i) => {
     // TODO: reposition items based on actor rotation
     item.pos = node.actor.pos.add(vec(2 + i * 8, 2));
@@ -122,9 +122,9 @@ const scenery = [
   new Shelf({ tile: vec(1, 1), side: ESide.top }),
 ];
 
-const srBay = <RouteNode>{ actor: scenery[0], items: [...items] };
-const shelf1 = <RouteNode>{ actor: scenery[1], items: [] };
-const shelf2 = <RouteNode>{ actor: scenery[2], items: [] };
+const srBay = <RouteNode_t>{ actor: scenery[0], items: [...items] };
+const shelf1 = <RouteNode_t>{ actor: scenery[1], items: [] };
+const shelf2 = <RouteNode_t>{ actor: scenery[2], items: [] };
 
 export default (game: Engine) => {
   // game.input.pointers.primary.on('move', e => {});

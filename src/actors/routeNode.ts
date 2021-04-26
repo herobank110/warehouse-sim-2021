@@ -9,6 +9,8 @@ export enum ESide {
 }
 
 export class RouteNode extends Actor {
+  public items = <Actor[]>[];
+
   constructor(private routeNode: { tile: Vector; side: ESide }) {
     super({
       // position in correct place for anchor (0, 0)
