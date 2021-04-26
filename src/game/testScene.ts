@@ -1,4 +1,5 @@
 import { Scene, Engine, Actor, Color, vec, Sprite } from 'excalibur';
+import { Square, Triangle } from '../actors/item';
 import { ESide, RouteNode, Shelf, SrBay } from '../actors/routeNode';
 import { warehouseGlobals } from '../globals';
 import { R } from '../utils';
@@ -98,28 +99,12 @@ function scheduleForklift(ctx: ForkliftRunning) {
   }
 }
 
-// box, box, triangle
-const items = [
-  new Actor({
-    currentDrawing: new Sprite(R.texture.square, 0, 0, 7, 7),
-    pos: tilePos(vec(0, 0)).add(vec(2, 2)),
-    anchor: zero(),
-  }),
-  new Actor({
-    currentDrawing: new Sprite(R.texture.square, 0, 0, 7, 7),
-    pos: tilePos(vec(0, 0)).add(vec(2, 10)),
-    anchor: zero(),
-  }),
-  new Actor({
-    currentDrawing: new Sprite(R.texture.triangle, 0, 0, 7, 7),
-    pos: tilePos(vec(0, 0)).add(vec(2, 18)),
-    anchor: zero(),
-  }),
-];
+const items = [new Square(), new Square(), new Triangle()];
 
-// s/r, shelf1, shelf2
 const scenery = [
   new SrBay({ tile: vec(0, 0), side: ESide.left }),
+  new Shelf({ tile: vec(1, 0), side: ESide.top }),
+  new Shelf({ tile: vec(1, 1), side: ESide.top }),
   // no depot for now
   // new Actor({
   //   pos: tileCoords(vec(0, 1)),
@@ -128,8 +113,6 @@ const scenery = [
   //   color: Color.fromHex('51b6db'),
   //   anchor: zero(),
   // }),
-  new Shelf({ tile: vec(1, 0), side: ESide.top }),
-  new Shelf({ tile: vec(1, 1), side: ESide.top }),
 ];
 
 const srBay: RouteNode = scenery[0];
