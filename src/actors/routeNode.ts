@@ -40,8 +40,22 @@ export class BasicRouteNode extends Actor implements ITile {
     const offset = vec([8, 0][this.side % 2], [0, 8][this.side % 2]);
     this.items.map((item, i) => {
       item.pos = this.pos.add(vec(2, 2)).add(offset.scale(i));
-      item.visible = true;
     });
+  }
+
+  popItem() {
+    const item = this.items.shift();
+    if (item) {
+      item.visible = false;
+      this.organizeItems();
+    }
+    return item;
+  }
+
+  pushItem(item: Actor) {
+    this.items.push(item);
+    item.visible = true;
+    this.organizeItems();
   }
 }
 

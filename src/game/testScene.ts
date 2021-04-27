@@ -38,7 +38,7 @@ function endDrag(to: Actor) {
 function dispatchForklift(route: Route) {
   if (idleForklifts == 0) return;
 
-  const item = route[0].items.shift();
+  const item = route[0].popItem();
   if (!item) return;
 
   // spawn a forklift
@@ -66,9 +66,8 @@ function runRoute(forklift: Forklift, item: Actor, route: Route) {
 function unloadForklift(ctx: ForkliftRunning) {
   if (!ctx.forklift.item) throw new Error('Cannot unload empty forklift');
   const item = ctx.forklift.item;
-  ctx.route[1].items.push(item);
+  ctx.route[1].pushItem(item);
   ctx.forklift.item = undefined;
-  ctx.route[1].organizeItems();
   scheduleForklift(ctx);
 }
 
@@ -89,12 +88,13 @@ function scheduleForklift(ctx: ForkliftRunning) {
     ctx.forklift.actor.actions
       .moveTo(ctx.route[0].pos.x + 14, ctx.route[0].pos.y + 14, 10)
       .callMethod(() => {
-        const item = ctx.route[0].items.shift();
+        const item = ctx.route[0].popItem();
         if (!item) {
           ctx.forklift.actor.kill();
           return;
         }
-        const newCtx = runRoute(ctx.forklift, item, ctx.route);
+        // Create a new forklift running context.
+        runRoute(ctx.forklift, item, ctx.route);
         deregisterRunningForklift(ctx);
       });
   }
