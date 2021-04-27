@@ -37,9 +37,10 @@ export class BasicRouteNode extends Actor implements ITile {
   }
 
   /** reposition items based on actor rotation */
-  organizeItems() {
+  private organizeItems() {
     const offset = vec([8, 0][this.side % 2], [0, 8][this.side % 2]);
     this.items.map((item, i) => {
+      this.scene.add(item);
       item.pos = this.pos.add(vec(2, 2)).add(offset.scale(i));
     });
   }
@@ -53,9 +54,9 @@ export class BasicRouteNode extends Actor implements ITile {
     return item;
   }
 
-  pushItem(item: Actor) {
-    this.items.push(item);
-    item.visible = true;
+  pushItem(...items: Actor[]) {
+    this.items.push(...items);
+    items.map(item => (item.visible = true));
     this.organizeItems();
   }
 }
