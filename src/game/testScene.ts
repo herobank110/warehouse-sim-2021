@@ -53,15 +53,6 @@ function dispatchForklift(route: Route) {
   return runRoute({ actor }, item, route);
 }
 
-function organizeItems(node: RouteNode) {
-  // reposition items based on actor rotation
-  const offset = vec([8, 0][node.side % 2], [0, 8][node.side % 2]);
-  node.items.map((item, i) => {
-    item.pos = node.pos.add(vec(2, 2)).add(offset.scale(i));
-    item.visible = true;
-  });
-}
-
 /** Assumes he's already at the first point in the route. */
 function runRoute(forklift: Forklift, item: Actor, route: Route) {
   forklift.item = item;
@@ -77,7 +68,7 @@ function unloadForklift(ctx: ForkliftRunning) {
   const item = ctx.forklift.item;
   ctx.route[1].items.push(item);
   ctx.forklift.item = undefined;
-  organizeItems(ctx.route[1]);
+  ctx.route[1].organizeItems();
   scheduleForklift(ctx);
 }
 
@@ -123,7 +114,7 @@ export default (game: Engine) => {
   );
 
   srBays[0].items.push(...items);
-  organizeItems(srBays[0]);
+  srBays[0].organizeItems();
 
   srBays.map(s => s.on('pointerdown', e => startDrag(e.target)));
   shelves.map(s => s.on('pointerup', e => endDrag(e.target)));

@@ -10,7 +10,7 @@ export enum ESide {
 }
 
 export class BasicRouteNode extends Actor implements ITile {
-  public items = <Actor[]>[];
+  items = <Actor[]>[];
 
   constructor(private routeNode: { tile: Vector; side: ESide }) {
     super({
@@ -27,12 +27,21 @@ export class BasicRouteNode extends Actor implements ITile {
     });
   }
 
-  public get tile() {
+  get tile() {
     return this.routeNode.tile;
   }
 
-  public get side() {
+  get side() {
     return this.routeNode.side;
+  }
+
+  /** reposition items based on actor rotation */
+  organizeItems() {
+    const offset = vec([8, 0][this.side % 2], [0, 8][this.side % 2]);
+    this.items.map((item, i) => {
+      item.pos = this.pos.add(vec(2, 2)).add(offset.scale(i));
+      item.visible = true;
+    });
   }
 }
 
