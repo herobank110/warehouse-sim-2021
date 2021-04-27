@@ -39,18 +39,19 @@ export type TruckState = PickUp | DropOff;
  * And dies once complete.
  */
 export class Truck extends Actor {
-  constructor(purpose: TruckState) {
+  constructor(private purpose: TruckState) {
     super();
-
-    if (purpose instanceof DropOff) {
-      this.dropOff(purpose);
-    } else if (purpose instanceof PickUp) {
-      // TODO: this.pickUp();
-    }
   }
 
   onInitialize(engine: Engine) {
     super.onInitialize(engine);
+
+    // Now scene reference is set!
+    if (this.purpose instanceof DropOff) {
+      this.dropOff(this.purpose);
+    } else if (this.purpose instanceof PickUp) {
+      // TODO: this.pickUp();
+    }
 
     // assumes loading bays are always at the left of screen
     this.anchor.setTo(1, 0);
@@ -63,6 +64,7 @@ export class Truck extends Actor {
     begin.x = 0; // start off screen
     const end = bayPos.add(vec(-4, 0));
 
+    this.organizeItems(ctx.dropOff.items);
     this.drive(begin, end, EasingFunctions.EaseOutCubic);
     this.actions.callMethod(() => this.offload(ctx));
   }
@@ -91,8 +93,9 @@ export class Truck extends Actor {
 
   private organizeItems(items: Item[]) {
     items.map((item, i) => {
+      this.scene.remove(item);
       this.add(item);
-      item.pos.setTo(2 + i * 8, 2);
+      item.pos.setTo(-37 + 2 + i * 8, 2);
     });
   }
 }
