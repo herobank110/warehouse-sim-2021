@@ -7,7 +7,7 @@ import {
   Shelf,
   SrBay,
 } from '../actors/routeNode';
-import { Truck } from '../actors/truck';
+import { DropOff, Truck } from '../actors/truck';
 import { warehouseGlobals } from '../globals';
 import { tilePos } from '../utils';
 
@@ -123,8 +123,7 @@ export default (game: Engine) => {
 
   [...srBays, ...shelves, ...items].map(i => scene.add(i));
 
-  const tr = new Truck();
-  tr.dropOff(srBays[0]);
+  const tr = new Truck(new DropOff({ items: [], bay: srBays[0] }));
   scene.add(tr);
 
   scene.camera.pos.setTo(100, 100);
