@@ -75,7 +75,7 @@ export class Truck extends Actor {
 
   /** slowly remove items one by one into the current bay.*/
   private offload(ctx: DropOff) {
-    const delay = 250;
+    const delay = 750;
     ctx.dropOff.items.map((_, i) =>
       setTimeout(() => {
         // pop one item into bay
