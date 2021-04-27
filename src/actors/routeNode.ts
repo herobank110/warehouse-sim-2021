@@ -10,6 +10,7 @@ export enum ESide {
 }
 
 export class BasicRouteNode extends Actor implements ITile {
+  // TODO: replace actor with BasicItem
   items = <Actor[]>[];
 
   constructor(private routeNode: { tile: Vector; side: ESide }) {

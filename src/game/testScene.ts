@@ -7,7 +7,9 @@ import {
   Shelf,
   SrBay,
 } from '../actors/routeNode';
+import { Truck } from '../actors/truck';
 import { warehouseGlobals } from '../globals';
+import { tilePos } from '../utils';
 
 // TODO: make forklift class, make free functions member fn
 type Forklift = { actor: Actor; item?: Actor };
@@ -120,6 +122,10 @@ export default (game: Engine) => {
   shelves.map(s => s.on('pointerup', e => endDrag(e.target)));
 
   [...srBays, ...shelves, ...items].map(i => scene.add(i));
+
+  const tr = new Truck();
+  tr.dropOff(srBays[0]);
+  scene.add(tr);
 
   scene.camera.pos.setTo(100, 100);
   scene.camera.zoom(2);
