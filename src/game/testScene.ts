@@ -115,15 +115,18 @@ export default (game: Engine) => {
     new Shelf({ tile: vec(1, 1), side: ESide.top }),
   );
 
-  // srBays[0].items.push(...items);
-  // srBays[0].organizeItems();
-
   srBays.map(s => s.on('pointerdown', e => startDrag(e.target)));
   shelves.map(s => s.on('pointerup', e => endDrag(e.target)));
 
   [...srBays, ...shelves, ...items].map(i => scene.add(i));
 
-  const tr = new Truck(new DropOff({ items, bay: srBays[0] }));
+  srBays[0].pushItem(...items);
+
+  const tr = new Truck(
+    // new DropOff({ items: [...items, new Square()], bay: srBays[0] }),
+    // new DropOff({ items, bay: srBays[0] }),
+    new DropOff({ items: [], bay: srBays[0] }),
+  );
   scene.add(tr);
 
   scene.camera.pos.setTo(100, 100);

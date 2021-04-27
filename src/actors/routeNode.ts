@@ -1,5 +1,5 @@
 import { Actor, Color, Engine, vec, Vector } from 'excalibur';
-import { tilePos, zero } from '../utils';
+import { attachActorToActor, tilePos, zero } from '../utils';
 import { ITile } from './tile';
 
 export enum ESide {
@@ -40,8 +40,8 @@ export class BasicRouteNode extends Actor implements ITile {
   private organizeItems() {
     const offset = vec([8, 0][this.side % 2], [0, 8][this.side % 2]);
     this.items.map((item, i) => {
-      this.scene.add(item);
-      item.pos = this.pos.add(vec(2, 2)).add(offset.scale(i));
+      attachActorToActor(item, this);
+      item.pos = offset.scale(i).add(vec(2, 2));
     });
   }
 

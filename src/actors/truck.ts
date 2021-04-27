@@ -7,7 +7,7 @@ import {
   vec,
   Vector,
 } from 'excalibur';
-import { R, tilePos } from '../utils';
+import { R, tilePos, attachActorToActor } from '../utils';
 import { BasicItem, Item } from './item';
 import { SrBay } from './routeNode';
 
@@ -93,9 +93,8 @@ export class Truck extends Actor {
 
   private organizeItems(items: Item[]) {
     items.map((item, i) => {
-      this.scene.remove(item);
-      this.add(item);
-      item.pos.setTo(-37 + 2 + i * 8, 2);
+      attachActorToActor(item, this);
+      item.pos.setTo(-35 + i * 8, 2);
     });
   }
 }
