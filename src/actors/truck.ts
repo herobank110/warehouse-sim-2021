@@ -59,6 +59,10 @@ export class Truck extends Actor {
   }
 
   private dropOff(ctx: DropOff) {
+    // not strictly needed as not using excalibur repeat action any more
+    if (ctx.dropOff.items.length <= 1)
+      throw new Error('attempted truck drop off with one or no items');
+
     const bayPos = tilePos(ctx.dropOff.bay.tile);
     const begin = bayPos.clone();
     begin.x = 0; // start off screen
@@ -69,10 +73,20 @@ export class Truck extends Actor {
     this.actions.callMethod(() => this.offload(ctx));
   }
 
+  /** slowly remove items one by one into the current bay.*/
   private offload(ctx: DropOff) {
-    // TODO: slowly remove items one by one into the current bay.
-
-    setTimeout(() => this.depart(ctx), 1000);
+    const delay = 250;
+    ctx.dropOff.items.map((_, i) =>
+      setTimeout(() => {
+        // pop one item into bay
+        const item = ctx.dropOff.items.shift();
+        if (!item) throw new Error('truck offload items out of bounds');
+        ctx.dropOff.bay.pushItem(item);
+        this.organizeItems(ctx.dropOff.items);
+      }, i * delay),
+    );
+    // fails if items has zero or one item
+    setTimeout(() => this.depart(ctx), ctx.dropOff.items.length * delay);
   }
 
   private depart(ctx: DropOff) {

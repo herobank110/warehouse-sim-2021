@@ -1,6 +1,6 @@
 import { Actor, Scene } from 'excalibur';
 
 export function attachActorToActor(target: Actor, parent: Actor | Scene) {
-  (target.scene || target.parent)?.remove(target);
+  (target.parent || target.scene)?.remove(target);
   parent.add(target);
 }
