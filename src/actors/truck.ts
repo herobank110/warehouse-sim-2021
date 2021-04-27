@@ -88,4 +88,11 @@ export class Truck extends Actor {
     this.pos.setTo(begin.x, begin.y);
     this.actions.easeTo(end.x, end.y, 4000, easing);
   }
+
+  private organizeItems(items: Item[]) {
+    items.map((item, i) => {
+      this.add(item);
+      item.pos.setTo(2 + i * 8, 2);
+    });
+  }
 }
