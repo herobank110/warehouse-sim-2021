@@ -120,14 +120,7 @@ export default (game: Engine) => {
 
   [...srBays, ...shelves, ...items].map(i => scene.add(i));
 
-  // srBays[0].pushItem(...items);
-
-  const tr = new Truck(
-    // new DropOff({ items: [...items, new Square()], bay: srBays[0] }),
-    // new DropOff({ items, bay: srBays[0] }),
-    // new DropOff({ items: [], bay: srBays[0] }),
-    new DropOff({ items: [items[0], items[1]], bay: srBays[0] }),
-  );
+  const tr = new Truck(new DropOff({ items, bay: srBays[0] }));
   scene.add(tr);
 
   scene.camera.pos.setTo(100, 100);
