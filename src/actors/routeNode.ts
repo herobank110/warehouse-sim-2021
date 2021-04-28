@@ -46,9 +46,13 @@ export class BasicRouteNode extends Actor implements ITile {
     });
   }
 
-  popItem() {
-    const item = this.items.shift();
+  popItem(index?: number) {
+    index = index ?? this.items.length - 1;
+    const item = this.items[index];
+    console.log('popped index' + index);
+
     if (item) {
+      this.items.splice(index, 1);
       item.visible = false;
       this.organizeItems();
       this.onItemsChanged?.call(undefined);

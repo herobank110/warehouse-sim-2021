@@ -117,6 +117,7 @@ export class Truck extends Actor {
     // TODO: also display a tick over the item (maybe use a single array pickUp.items, with field isGot)
     ctx.pickUp.have.push(...ctx.pickUp.need.splice(i, 1));
     // remove previous world representation of item
+    ctx.pickUp.bay.popItem(ctx.pickUp.bay.items.indexOf(item));
     item.kill();
 
     if (ctx.pickUp.need.length == 0) {
