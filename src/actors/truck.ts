@@ -109,11 +109,8 @@ export class Truck extends Actor {
 
   /** @returns whether the item was loaded */
   private tryLoadItem(ctx: PickUp, item: Item) {
-    if (!(this.purpose instanceof PickUp))
-      throw new Error('must be pick up truck to truck');
-
     const i = ctx.pickUp.items.findIndex(
-      it => !it.isGot && it.constructor == item.constructor,
+      it => !it.isGot && it.item.constructor == item.constructor,
     );
     if (i == -1) {
       return false;
@@ -134,7 +131,13 @@ export class Truck extends Actor {
   }
 
   private gotAllItems(ctx: PickUp) {
-    return !ctx.pickUp.items.some(item => !item.isGot);
+    for (const item of ctx.pickUp.items) {
+      if (!item.isGot) {
+        return false;
+      }
+    }
+    return true;
+    // return !ctx.pickUp.items.some(item => !item.isGot);
   }
 
   // helpers

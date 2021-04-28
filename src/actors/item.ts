@@ -24,6 +24,7 @@ type DefaultConstructible<T> = new () => T;
 export class GettableItem extends Actor {
   private isGot_ = false;
   private tickActor?: Actor;
+  item: Item;
 
   get isGot() {
     return this.isGot_;
@@ -37,7 +38,8 @@ export class GettableItem extends Actor {
 
   constructor(itemType: DefaultConstructible<Item>) {
     super({ anchor: vec(0, 0) });
-    this.add(new itemType());
+    this.item = new itemType();
+    this.add(this.item);
   }
 
   onInitialize(engine: Engine) {
