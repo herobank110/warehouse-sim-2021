@@ -96,12 +96,14 @@ export class Truck extends Actor {
   private pickUp(ctx: PickUp) {
     this.arrive(ctx.pickUp.bay);
     this.organizeItems(ctx.pickUp.need);
-
-    this.loadUp(ctx);
-    ctx.pickUp.bay.bayTruckCallback = () => this.loadUp(ctx);
+    this.actions.callMethod(() => {
+      this.loadUp(ctx);
+      ctx.pickUp.bay.bayTruckCallback = () => this.loadUp(ctx);
+    });
   }
 
   private loadUp(ctx: PickUp) {
+    // TODO: return early when one item is taken and have a min delay in item taking.
     // copy in case items is mutated, thereby invalidating iterator
     [...ctx.pickUp.bay.items].map(item => this.tryLoadItem(ctx, item));
   }
