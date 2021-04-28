@@ -7,6 +7,7 @@ import {
   vec,
   Vector,
 } from 'excalibur';
+import { addItemToArray } from 'excalibur/dist/Util';
 import { R, tilePos, attachActorToActor } from '../utils';
 import { BasicItem, Item } from './item';
 import { SrBay } from './routeNode';
@@ -51,7 +52,7 @@ export class Truck extends Actor {
     if (this.purpose instanceof DropOff) {
       this.dropOff(this.purpose);
     } else if (this.purpose instanceof PickUp) {
-      // TODO: this.pickUp();
+      this.pickUp(this.purpose);
     }
 
     // assumes loading bays are always at the left of screen
@@ -59,18 +60,15 @@ export class Truck extends Actor {
     this.addDrawing(truckSprite);
   }
 
+  // drop off
+
   private dropOff(ctx: DropOff) {
     // not strictly needed as not using excalibur repeat action any more
     if (ctx.dropOff.items.length <= 1)
       throw new Error('attempted truck drop off with one or no items');
 
-    const bayPos = tilePos(ctx.dropOff.bay.tile);
-    const begin = bayPos.clone();
-    begin.x = 0; // start off screen
-    const end = bayPos.add(vec(-4, 0));
-
     this.organizeItems(ctx.dropOff.items);
-    this.drive(begin, end, EasingFunctions.EaseOutCubic);
+    this.arrive(ctx.dropOff.bay);
     this.actions.callMethod(() => this.offload(ctx));
   }
 
@@ -87,11 +85,56 @@ export class Truck extends Actor {
       }, i * delay),
     );
     // fails if items has zero or one item
-    setTimeout(() => this.depart(ctx), ctx.dropOff.items.length * delay);
+    setTimeout(
+      () => this.depart(ctx.dropOff.bay),
+      ctx.dropOff.items.length * delay,
+    );
   }
 
-  private depart(ctx: DropOff) {
-    const bayPos = tilePos(ctx.dropOff.bay.tile);
+  // pick up
+
+  private pickUp(ctx: PickUp) {
+    this.arrive(ctx.pickUp.bay);
+    this.organizeItems(ctx.pickUp.need);
+  }
+
+  /** @returns whether the item was loaded */
+  tryLoadItem(item: Item) {
+    if (!(this.purpose instanceof PickUp))
+      throw new Error('must be pick up truck to truck');
+
+    const ctx = this.purpose;
+    const i = ctx.pickUp.need.findIndex(
+      it => it.constructor == item.constructor,
+    );
+    if (i == -1) {
+      return false;
+    }
+
+    // TODO: also display a tick over the item (maybe use a single array pickUp.items, with field isGot)
+    ctx.pickUp.have.push(...ctx.pickUp.need.splice(i, 1));
+    // remove previous world representation of item
+    item.kill();
+
+    if (ctx.pickUp.need.length == 0) {
+      // TODO: track score in packages shipped
+      this.depart(ctx.pickUp.bay);
+    }
+    return true;
+  }
+
+  // helpers
+
+  private arrive(bay: SrBay) {
+    const bayPos = tilePos(bay.tile);
+    const begin = bayPos.clone();
+    begin.x = 0; // start off screen
+    const end = bayPos.add(vec(-4, 0));
+    this.drive(begin, end, EasingFunctions.EaseOutCubic);
+  }
+
+  private depart(bay: SrBay) {
+    const bayPos = tilePos(bay.tile);
     const begin = bayPos.add(vec(-4, 0));
     const end = bayPos.clone();
     end.x = 0; // start off screen
