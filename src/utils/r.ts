@@ -16,6 +16,7 @@ export const R = {
     triangle: new Texture(triangleUrl),
   } as const,
   color: {
-    bg: Color.Black,
+    bg: Color.White,
+    fg: Color.fromHex('afafaf'),
   } as const,
 } as const;

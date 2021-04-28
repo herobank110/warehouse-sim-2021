@@ -9,5 +9,6 @@ export default class extends Loader {
     this.playButtonText = 'Start';
     this.logo = logoUrl;
     this.backgroundColor = R.color.bg.toHex();
+    this.loadingBarColor = R.color.fg;
   }
 }
