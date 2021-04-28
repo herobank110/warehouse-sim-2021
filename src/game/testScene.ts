@@ -1,5 +1,5 @@
 import { Scene, Engine, Actor, Color, vec } from 'excalibur';
-import { BasicItem, Square, Triangle } from '../actors/item';
+import { BasicItem, GettableItem, Square, Triangle } from '../actors/item';
 import {
   BasicRouteNode,
   ESide,
@@ -124,6 +124,11 @@ export default (game: Engine) => {
   [...srBays, ...shelves, ...items].map(i => scene.add(i));
 
   scene.add(new Truck(new DropOff({ items, bay: srBays[0] })));
+
+  const g = new GettableItem(new Square());
+  g.pos.setTo(10, 10);
+  scene.add(g);
+  setTimeout(() => (g.isGot = true), 10);
 
   setTimeout(() => {
     scene.add(

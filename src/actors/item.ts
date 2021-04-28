@@ -1,5 +1,9 @@
-import { Actor, Engine, Sprite } from 'excalibur';
-import { Darken } from 'excalibur/dist/Drawing/SpriteEffects';
+import { Actor, Engine, Sprite, vec } from 'excalibur';
+import {
+  Darken,
+  Lighten,
+  Saturate,
+} from 'excalibur/dist/Drawing/SpriteEffects';
 import { R } from '../utils';
 
 export type Item = Square | Triangle;
@@ -13,8 +17,10 @@ export class BasicItem extends Actor {
 
 /** Item that can be gotten. */
 const tickSprite = new Sprite(R.texture.tick, 0, 0, 7, 7);
-export class GettableItem extends BasicItem {
-  isGot_ = false;
+
+/** Wraps an item into a gettable thing. */
+export class GettableItem extends Actor {
+  private isGot_ = false;
   private tickActor?: Actor;
 
   get isGot() {
@@ -25,13 +31,19 @@ export class GettableItem extends BasicItem {
     this.isGot_ = value;
     if (!this.tickActor) throw new Error('cannot set isGot without tick actor');
     this.tickActor.visible = value;
-    this.currentDrawing.clearEffects();
-    this.currentDrawing.addEffect(new Darken(value ? 0 : 0.5));
+  }
+
+  constructor(public item: Item) {
+    super({ anchor: vec(0, 0) });
+    this.add(item);
   }
 
   onInitialize(engine: Engine) {
     super.onInitialize(engine);
-    this.tickActor = new Actor({ currentDrawing: tickSprite });
+    this.tickActor = new Actor({
+      currentDrawing: tickSprite,
+      anchor: vec(0, 0),
+    });
     this.add(this.tickActor);
     this.isGot = this.isGot_;
   }
