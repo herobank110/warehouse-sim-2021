@@ -9,7 +9,7 @@ import {
 } from 'excalibur';
 import { addItemToArray } from 'excalibur/dist/Util';
 import { R, tilePos, attachActorToActor } from '../utils';
-import { BasicItem, Item } from './item';
+import { BasicItem, GettableItem, Item } from './item';
 import { SrBay } from './routeNode';
 
 const truckSprite = new Sprite(R.texture.truck, 0, 0, 59, 15);
@@ -18,8 +18,7 @@ export class PickUp {
   constructor(
     public pickUp: {
       bay: SrBay;
-      need: BasicItem[];
-      have: BasicItem[];
+      items: GettableItem[];
     },
   ) {}
 }
@@ -95,7 +94,7 @@ export class Truck extends Actor {
 
   private pickUp(ctx: PickUp) {
     this.arrive(ctx.pickUp.bay);
-    this.organizeItems(ctx.pickUp.need);
+    this.organizeItems(ctx.pickUp.items);
     this.actions.callMethod(() => {
       this.loadUp(ctx);
       ctx.pickUp.bay.bayTruckCallback = () => this.loadUp(ctx);
@@ -113,25 +112,29 @@ export class Truck extends Actor {
     if (!(this.purpose instanceof PickUp))
       throw new Error('must be pick up truck to truck');
 
-    const i = ctx.pickUp.need.findIndex(
-      it => it.constructor == item.constructor,
+    const i = ctx.pickUp.items.findIndex(
+      it => !it.isGot && it.constructor == item.constructor,
     );
     if (i == -1) {
       return false;
     }
 
-    // TODO: also display a tick over the item (maybe use a single array pickUp.items, with field isGot)
-    ctx.pickUp.have.push(...ctx.pickUp.need.splice(i, 1));
     // remove previous world representation of item
     ctx.pickUp.bay.popItem(ctx.pickUp.bay.items.indexOf(item));
     item.kill();
+    // display a tick over the item
+    ctx.pickUp.items[i].isGot = true;
 
-    if (ctx.pickUp.need.length == 0) {
+    if (this.gotAllItems(ctx)) {
       // TODO: track score in packages shipped
       ctx.pickUp.bay.bayTruckCallback = undefined;
       this.depart(ctx.pickUp.bay);
     }
     return true;
+  }
+
+  private gotAllItems(ctx: PickUp) {
+    return !ctx.pickUp.items.some(item => !item.isGot);
   }
 
   // helpers

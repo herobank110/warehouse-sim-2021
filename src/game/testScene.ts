@@ -125,7 +125,7 @@ export default (game: Engine) => {
 
   scene.add(new Truck(new DropOff({ items, bay: srBays[0] })));
 
-  const g = new GettableItem(new Square());
+  const g = new GettableItem(Triangle);
   g.pos.setTo(10, 10);
   scene.add(g);
   setTimeout(() => (g.isGot = true), 10);
@@ -135,8 +135,7 @@ export default (game: Engine) => {
       new Truck(
         new PickUp({
           bay: srBays[0],
-          need: [new Square(), new Square()],
-          have: [],
+          items: [new GettableItem(Square), new GettableItem(Square)],
         }),
       ),
     );

@@ -1,4 +1,4 @@
-import { Actor, Engine, Sprite, vec } from 'excalibur';
+import { Actor, Constructor, Engine, Sprite, vec } from 'excalibur';
 import {
   Darken,
   Lighten,
@@ -18,6 +18,8 @@ export class BasicItem extends Actor {
 /** Item that can be gotten. */
 const tickSprite = new Sprite(R.texture.tick, 0, 0, 7, 7);
 
+type DefaultConstructible<T> = new () => T;
+
 /** Wraps an item into a gettable thing. */
 export class GettableItem extends Actor {
   private isGot_ = false;
@@ -33,9 +35,9 @@ export class GettableItem extends Actor {
     this.tickActor.visible = value;
   }
 
-  constructor(public item: Item) {
+  constructor(itemType: DefaultConstructible<Item>) {
     super({ anchor: vec(0, 0) });
-    this.add(item);
+    this.add(new itemType());
   }
 
   onInitialize(engine: Engine) {
