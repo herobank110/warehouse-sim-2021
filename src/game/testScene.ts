@@ -1,5 +1,5 @@
 import { Scene, Engine, Actor, Color, vec } from 'excalibur';
-import { Square, Triangle } from '../actors/item';
+import { BasicItem, Square, Triangle } from '../actors/item';
 import {
   BasicRouteNode,
   ESide,
@@ -31,13 +31,14 @@ function startDrag(from: Actor) {
 }
 
 function endDrag(to: Actor) {
-  if (dragFrom && to instanceof Shelf && shelves.includes(to)) {
-    dispatchForklift([dragFrom, to]);
+  // if (dragFrom && to instanceof Shelf && shelves.includes(to)) {
+  if (dragFrom && to instanceof BasicRouteNode) {
+    tryDispatchForklift([dragFrom, to]);
   }
   dragFrom = undefined;
 }
 
-function dispatchForklift(route: Route) {
+function tryDispatchForklift(route: Route) {
   if (idleForklifts == 0) return;
 
   const item = route[0].popItem();
@@ -65,18 +66,6 @@ function runRoute(forklift: Forklift, item: Actor, route: Route) {
   return ctx;
 }
 
-function unloadForklift(ctx: ForkliftRunning) {
-  if (!ctx.forklift.item) throw new Error('Cannot unload empty forklift');
-  const item = ctx.forklift.item;
-  ctx.route[1].pushItem(item);
-  ctx.forklift.item = undefined;
-  scheduleForklift(ctx);
-}
-
-function noItemsToPickup(route: Route) {
-  return route[0]?.items.length == 0 ?? false;
-}
-
 function scheduleForklift(ctx: ForkliftRunning) {
   if (ctx.forklift.item) {
     // take to destination
@@ -102,6 +91,18 @@ function scheduleForklift(ctx: ForkliftRunning) {
   }
 }
 
+function unloadForklift(ctx: ForkliftRunning) {
+  if (!ctx.forklift.item) throw new Error('Cannot unload empty forklift');
+  const item = ctx.forklift.item;
+  ctx.route[1].pushItem(item);
+  ctx.forklift.item = undefined;
+  scheduleForklift(ctx);
+}
+
+function noItemsToPickup(route: Route) {
+  return route[0]?.items.length == 0 ?? false;
+}
+
 export default (game: Engine) => {
   // game.input.pointers.primary.on('move', e => {});
   // game.input.pointers.primary.on('down', e => {});
@@ -115,8 +116,10 @@ export default (game: Engine) => {
     new Shelf({ tile: vec(1, 1), side: ESide.top }),
   );
 
-  srBays.map(s => s.on('pointerdown', e => startDrag(e.target)));
-  shelves.map(s => s.on('pointerup', e => endDrag(e.target)));
+  [...srBays, ...shelves].map(s => {
+    s.on('pointerdown', e => startDrag(e.target));
+    s.on('pointerup', e => endDrag(e.target));
+  });
 
   [...srBays, ...shelves, ...items].map(i => scene.add(i));
 
