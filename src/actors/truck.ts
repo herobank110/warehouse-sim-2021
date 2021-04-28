@@ -97,9 +97,13 @@ export class Truck extends Actor {
     this.arrive(ctx.pickUp.bay);
     this.organizeItems(ctx.pickUp.need);
 
-    ctx.pickUp.bay.onItemsChanged = () => {
-      ctx.pickUp.bay.items.map(item => this.tryLoadItem(ctx, item));
-    };
+    this.loadUp(ctx);
+    ctx.pickUp.bay.bayTruckCallback = () => this.loadUp(ctx);
+  }
+
+  private loadUp(ctx: PickUp) {
+    // copy in case items is mutated, thereby invalidating iterator
+    [...ctx.pickUp.bay.items].map(item => this.tryLoadItem(ctx, item));
   }
 
   /** @returns whether the item was loaded */
@@ -122,6 +126,7 @@ export class Truck extends Actor {
 
     if (ctx.pickUp.need.length == 0) {
       // TODO: track score in packages shipped
+      ctx.pickUp.bay.bayTruckCallback = undefined;
       this.depart(ctx.pickUp.bay);
     }
     return true;

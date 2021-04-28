@@ -12,7 +12,7 @@ export enum ESide {
 export class BasicRouteNode extends Actor implements ITile {
   // TODO: replace actor with BasicItem
   items = <Actor[]>[];
-  onItemsChanged?: () => void;
+  bayTruckCallback?: () => void;
 
   constructor(private routeNode: { tile: Vector; side: ESide }) {
     super({
@@ -55,7 +55,7 @@ export class BasicRouteNode extends Actor implements ITile {
       this.items.splice(index, 1);
       item.visible = false;
       this.organizeItems();
-      this.onItemsChanged?.call(undefined);
+      this.bayTruckCallback?.call(undefined);
     }
     return item;
   }
@@ -63,7 +63,7 @@ export class BasicRouteNode extends Actor implements ITile {
   pushItem(...items: Actor[]) {
     this.items.push(...items);
     items.map(item => (item.visible = true));
-    this.onItemsChanged?.call(undefined);
+    this.bayTruckCallback?.call(undefined);
     this.organizeItems();
   }
 }
