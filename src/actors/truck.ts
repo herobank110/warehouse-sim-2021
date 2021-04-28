@@ -16,8 +16,9 @@ const truckSprite = new Sprite(R.texture.truck, 0, 0, 59, 15);
 export class PickUp {
   constructor(
     public pickUp: {
-      have: BasicItem[];
+      bay: SrBay;
       need: BasicItem[];
+      have: BasicItem[];
     },
   ) {}
 }
