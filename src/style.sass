@@ -5,3 +5,10 @@ body
   place-items: center
   height: 100vh
   overflow: hidden
+
+#excalibur-play-root > #excalibur-play
+  $bg: #afafaf
+  background: $bg
+  border-radius: 99px
+  &:is(:hover, :active, :focus)
+    background: darken($bg, 8%)
