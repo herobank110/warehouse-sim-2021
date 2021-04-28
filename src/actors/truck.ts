@@ -96,14 +96,17 @@ export class Truck extends Actor {
   private pickUp(ctx: PickUp) {
     this.arrive(ctx.pickUp.bay);
     this.organizeItems(ctx.pickUp.need);
+
+    ctx.pickUp.bay.onItemsChanged = () => {
+      ctx.pickUp.bay.items.map(item => this.tryLoadItem(ctx, item));
+    };
   }
 
   /** @returns whether the item was loaded */
-  tryLoadItem(item: Item) {
+  private tryLoadItem(ctx: PickUp, item: Item) {
     if (!(this.purpose instanceof PickUp))
       throw new Error('must be pick up truck to truck');
 
-    const ctx = this.purpose;
     const i = ctx.pickUp.need.findIndex(
       it => it.constructor == item.constructor,
     );

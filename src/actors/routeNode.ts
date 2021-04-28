@@ -1,4 +1,4 @@
-import { Actor, Color, Engine, vec, Vector } from 'excalibur';
+import { Actor, Color, Engine, GameEvent, vec, Vector } from 'excalibur';
 import { attachActorToActor, tilePos, zero } from '../utils';
 import { ITile } from './tile';
 
@@ -12,6 +12,7 @@ export enum ESide {
 export class BasicRouteNode extends Actor implements ITile {
   // TODO: replace actor with BasicItem
   items = <Actor[]>[];
+  onItemsChanged?: () => void;
 
   constructor(private routeNode: { tile: Vector; side: ESide }) {
     super({
@@ -50,6 +51,7 @@ export class BasicRouteNode extends Actor implements ITile {
     if (item) {
       item.visible = false;
       this.organizeItems();
+      this.onItemsChanged?.call(undefined);
     }
     return item;
   }
@@ -57,6 +59,7 @@ export class BasicRouteNode extends Actor implements ITile {
   pushItem(...items: Actor[]) {
     this.items.push(...items);
     items.map(item => (item.visible = true));
+    this.onItemsChanged?.call(undefined);
     this.organizeItems();
   }
 }

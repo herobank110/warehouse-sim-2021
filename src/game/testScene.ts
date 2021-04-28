@@ -135,7 +135,7 @@ export default (game: Engine) => {
         }),
       ),
     );
-  }, 3000);
+  }, 7000);
 
   scene.camera.pos.setTo(100, 100);
   scene.camera.zoom(2);
