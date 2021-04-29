@@ -49,7 +49,6 @@ export class BasicRouteNode extends Actor implements ITile {
   popItem(index?: number) {
     index = index ?? this.items.length - 1;
     const item = this.items[index];
-    console.log('popped index' + index);
 
     if (item) {
       this.items.splice(index, 1);
