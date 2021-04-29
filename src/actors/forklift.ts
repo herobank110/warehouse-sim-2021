@@ -19,7 +19,10 @@ export class Forklift extends Actor {
 
   set item(value) {
     this.item_ = value;
-    // hide the original item in the world.
+    if (value) {
+      // hide the original item in the world.
+      value.visible = false;
+    }
   }
 
   constructor(forklift: { route: Route; item: Item; color: Color }) {
@@ -31,6 +34,18 @@ export class Forklift extends Actor {
     });
     this.item = forklift.item;
   }
+
+  goToDestination(ctx: ForkliftRunning) {
+    return this.goToNode(ctx.route[1]);
+  }
+
+  goToOrigin(ctx: ForkliftRunning) {
+    return this.goToNode(ctx.route[0]);
+  }
+
+  private goToNode(node: RouteNode) {
+    return this.actions.moveTo(node.pos.x + 14, node.pos.y + 14, 10);
+  }
 }
 
 export function tryDispatchForklift(route: Route) {
@@ -40,49 +55,55 @@ export function tryDispatchForklift(route: Route) {
   const actor = new Forklift({ route, item, color: Color.Red });
   warehouseGlobals.game.add(actor);
   idleForklifts--;
-  return runRoute(actor, item, route);
+  return idleToRunning(actor, item, route);
 }
 
 /** Assumes he's already at the first point in the route. */
-function runRoute(forklift: Forklift, item: Actor, route: Route) {
+function idleToRunning(forklift: Forklift, item: Actor, route: Route) {
   forklift.item = item;
   const ctx: ForkliftRunning = { forklift, route };
   runningForklifts.push(ctx);
   scheduleForklift(ctx);
-  item.visible = false;
   return ctx;
 }
 
+function runningToIdle(ctx: ForkliftRunning) {
+  deregisterRunningForklift(ctx);
+  ctx.forklift.kill();
+  idleForklifts++;
+}
+
+function recycleRunningToRunning() {}
+
 function scheduleForklift(ctx: ForkliftRunning) {
   if (ctx.forklift.item) {
-    // take to destination
-    ctx.forklift.actions
-      .moveTo(ctx.route[1].pos.x + 14, ctx.route[1].pos.y + 14, 10)
-      .callMethod(() => unloadForklift(ctx));
+    // already at first point in route
+    ctx.forklift.goToDestination(ctx).callMethod(() => unloadForklift(ctx));
   } else if (noItemsToPickup(ctx.route)) {
-    ctx.forklift.kill();
-    idleForklifts++;
+    // already at first point in route
+    runningToIdle(ctx);
   } else {
-    ctx.forklift.actions
-      .moveTo(ctx.route[0].pos.x + 14, ctx.route[0].pos.y + 14, 10)
-      .callMethod(() => {
-        const item = ctx.route[0].popItem();
-        if (!item) {
-          ctx.forklift.kill();
-          return;
-        }
-        // Create a new forklift running context.
-        runRoute(ctx.forklift, item, ctx.route);
-        deregisterRunningForklift(ctx);
-      });
+    // already at last point in route
+    ctx.forklift.goToOrigin(ctx).callMethod(() => {
+      const item = ctx.route[0].popItem();
+      ctx.forklift.item = item;
+      scheduleForklift(ctx);
+      if (!item) {
+        runningToIdle(ctx);
+        return;
+      }
+      // Create a new forklift running context.
+      idleToRunning(ctx.forklift, item, ctx.route);
+      deregisterRunningForklift(ctx);
+    });
   }
 }
 
 function unloadForklift(ctx: ForkliftRunning) {
-  if (!ctx.forklift.item) throw new Error('Cannot unload empty forklift');
   const item = ctx.forklift.item;
-  ctx.route[1].pushItem(item);
+  if (!item) throw new Error('Cannot unload empty forklift');
   ctx.forklift.item = undefined;
+  ctx.route[1].pushItem(item);
   scheduleForklift(ctx);
 }
 
