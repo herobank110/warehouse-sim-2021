@@ -51,11 +51,6 @@ export default (game: Engine) => {
 
   scene.add(new Truck(new DropOff({ items, bay: srBays[0] })));
 
-  const g = new GettableItem(Triangle);
-  g.pos.setTo(10, 10);
-  scene.add(g);
-  setTimeout(() => (g.isGot = true), 10);
-
   setTimeout(() => {
     scene.add(
       new Truck(
