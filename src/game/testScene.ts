@@ -1,6 +1,6 @@
 import { Scene, Engine, Actor, Color, vec } from 'excalibur';
 import { tryDispatchForklift } from '../actors/forklift';
-import { GettableItem, Square, Triangle } from '../actors/item';
+import { GettableItem, Item, Square, Triangle } from '../actors/item';
 import {
   BasicRouteNode,
   ESide,
@@ -9,6 +9,8 @@ import {
   SrBay,
 } from '../actors/routeNode';
 import { DropOff, PickUp, Truck } from '../actors/truck';
+import { warehouseGlobals } from '../globals';
+import { iota, lerp1 } from '../utils';
 
 // game state
 let dragFrom: RouteNode | undefined;
@@ -29,13 +31,41 @@ function endDrag(to: Actor) {
   dragFrom = undefined;
 }
 
+function loopTrucks() {
+  const scene = warehouseGlobals.game.currentScene;
+
+  const bay = srBays[0];
+  scene.add(
+    new Truck(
+      Math.random() < 0.6
+        ? new DropOff({
+            items: iota(lerp1(1, 4, Math.random())).map(
+              i => new (randomItemClass())(),
+            ),
+            bay,
+          })
+        : new PickUp({
+            items: iota(lerp1(1, 4, Math.random())).map(
+              i => new GettableItem(randomItemClass()),
+            ),
+            bay,
+          }),
+    ),
+  );
+
+  setTimeout(loopTrucks, lerp1(10000, 15000, Math.random()));
+}
+
+function randomItemClass(): new () => Item {
+  return [Square, Triangle, Triangle][Math.floor(Math.random() * 2)];
+}
+
 export default (game: Engine) => {
   // game.input.pointers.primary.on('move', e => {});
   // game.input.pointers.primary.on('down', e => {});
 
   const scene = new Scene(game);
 
-  const items = [new Square(), new Square(), new Triangle()];
   srBays.push(new SrBay({ tile: vec(0, 0), side: ESide.left }));
   shelves.push(
     new Shelf({ tile: vec(1, 0), side: ESide.top }),
@@ -47,21 +77,9 @@ export default (game: Engine) => {
     s.on('pointerup', e => endDrag(e.target));
   });
 
-  [...srBays, ...shelves, ...items].map(i => scene.add(i));
+  [...srBays, ...shelves].map(i => scene.add(i));
 
-  scene.add(new Truck(new DropOff({ items, bay: srBays[0] })));
-
-  setTimeout(() => {
-    scene.add(
-      new Truck(
-        new PickUp({
-          bay: srBays[0],
-          items: [new GettableItem(Square), new GettableItem(Square)],
-        }),
-      ),
-    );
-  }, 15000);
-
+  setTimeout(() => loopTrucks(), 1000);
   scene.camera.pos.setTo(100, 100);
   scene.camera.zoom(2);
 
