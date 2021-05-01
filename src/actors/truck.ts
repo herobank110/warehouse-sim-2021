@@ -74,7 +74,7 @@ export class Truck extends Actor {
   /** slowly remove items one by one into the current bay.*/
   private offload(ctx: DropOff) {
     console.log('offloading!');
-    
+
     const delay = 750;
     ctx.dropOff.items.map((_, i) =>
       setTimeout(() => {
@@ -130,6 +130,8 @@ export class Truck extends Actor {
 
     // remove previous world representation of item
     ctx.pickUp.bay.popItem(ctx.pickUp.bay.items.indexOf(item));
+    // emits an annoying error otherwise about not being in scene
+    this.add(item);
     item.kill();
     // display a tick over the item
     ctx.pickUp.items[i]!.isGot = true;
