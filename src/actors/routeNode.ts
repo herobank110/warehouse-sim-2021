@@ -1,6 +1,7 @@
 import { Actor, Color, Engine, GameEvent, vec, Vector } from 'excalibur';
 import { attachActorToActor, tilePos, zero } from '../utils';
 import { ITile } from './tile';
+import { Truck } from './truck';
 
 export enum ESide {
   top,
@@ -68,6 +69,8 @@ export class BasicRouteNode extends Actor implements ITile {
 }
 
 export class SrBay extends BasicRouteNode {
+  dockedTruck?: Truck;
+
   onInitialize(engine: Engine) {
     super.onInitialize(engine);
     this.color = Color.fromHex('dbc751');

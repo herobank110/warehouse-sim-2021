@@ -40,7 +40,7 @@ export type TruckState = PickUp | DropOff;
  * And dies once complete.
  */
 export class Truck extends Actor {
-  constructor(private purpose: TruckState) {
+  constructor(public purpose: TruckState) {
     super();
   }
 
@@ -97,6 +97,7 @@ export class Truck extends Actor {
     this.organizeItems(ctx.pickUp.items);
     this.actions.callMethod(() => {
       this.loadUp(ctx);
+      ctx.pickUp.bay.dockedTruck = this;
       ctx.pickUp.bay.bayTruckCallback = () => this.loadUp(ctx);
     });
   }
@@ -124,6 +125,7 @@ export class Truck extends Actor {
 
     if (this.gotAllItems(ctx)) {
       // TODO: track score in packages shipped
+      ctx.pickUp.bay.dockedTruck = undefined;
       ctx.pickUp.bay.bayTruckCallback = undefined;
       this.depart(ctx.pickUp.bay);
     }
