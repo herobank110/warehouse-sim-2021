@@ -67,8 +67,7 @@ export class Truck extends Actor {
       throw new Error('attempted truck drop off with one or no items');
 
     this.organizeItems(ctx.dropOff.items);
-    this.arrive(ctx.dropOff.bay);
-    this.actions.callMethod(() => this.offload(ctx));
+    return this.arrive(ctx.dropOff.bay, () => this.offload(ctx));
   }
 
   /** slowly remove items one by one into the current bay.*/
@@ -95,9 +94,8 @@ export class Truck extends Actor {
   // pick up
 
   private pickUp(ctx: PickUp) {
-    this.arrive(ctx.pickUp.bay);
     this.organizeItems(ctx.pickUp.items);
-    this.actions.callMethod(() => {
+    return this.arrive(ctx.pickUp.bay, () => {
       this.loadUp(ctx);
       ctx.pickUp.bay.dockedTruck = this;
       ctx.pickUp.bay.bayTruckCallback = () => this.loadUp(ctx);
@@ -132,7 +130,9 @@ export class Truck extends Actor {
     ctx.pickUp.bay.popItem(ctx.pickUp.bay.items.indexOf(item));
     // emits an annoying error otherwise about not being in scene
     this.add(item);
-    item.kill();
+    if (item.scene !== null) {
+      item.kill();
+    }
     // display a tick over the item
     ctx.pickUp.items[i]!.isGot = true;
 
@@ -157,12 +157,12 @@ export class Truck extends Actor {
 
   // helpers
 
-  private arrive(bay: SrBay) {
+  private arrive(bay: SrBay, fn?: () => void) {
     const bayPos = tilePos(bay.tile);
     const begin = bayPos.clone();
     begin.x = 0; // start off screen
     const end = bayPos.add(vec(-4, 0));
-    this.drive(begin, end, EasingFunctions.EaseOutCubic);
+    return this.drive(begin, end, EasingFunctions.EaseOutCubic, fn);
   }
 
   private depart(bay: SrBay) {
@@ -171,14 +171,24 @@ export class Truck extends Actor {
     const end = bayPos.clone();
     end.x = 0; // start off screen
 
-    this.drive(begin, end, EasingFunctions.EaseInCubic);
-    this.actions.die();
+    return this.drive(begin, end, EasingFunctions.EaseInCubic, () =>
+      this.kill(),
+    );
   }
 
   /** add a drive to the action queue. */
-  private drive(begin: Vector, end: Vector, easing: EasingFunction) {
+  private drive(
+    begin: Vector,
+    end: Vector,
+    easing: EasingFunction,
+    fn?: () => void,
+  ) {
     this.pos.setTo(begin.x, begin.y);
-    this.actions.easeTo(end.x, end.y, driveTime, easing);
+    return this.actions
+      .easeTo(end.x, end.y, driveTime, easing)
+      .callMethod(() => {
+        if (fn) fn();
+      });
   }
 
   private organizeItems(items: Item[]) {
