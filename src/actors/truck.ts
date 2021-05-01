@@ -12,6 +12,7 @@ import { GettableItem, Item } from './item';
 import { SrBay } from './routeNode';
 
 const truckSprite = new Sprite(R.texture.truck, 0, 0, 59, 15);
+const driveTime = 4000;
 
 export type TruckState = PickUp | DropOff;
 
@@ -175,7 +176,7 @@ export class Truck extends Actor {
   /** add a drive to the action queue. */
   private drive(begin: Vector, end: Vector, easing: EasingFunction) {
     this.pos.setTo(begin.x, begin.y);
-    this.actions.easeTo(end.x, end.y, 4000, easing);
+    this.actions.easeTo(end.x, end.y, driveTime, easing);
   }
 
   private organizeItems(items: Item[]) {
