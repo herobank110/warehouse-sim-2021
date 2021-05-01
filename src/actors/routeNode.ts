@@ -1,5 +1,6 @@
 import { Actor, Color, Engine, GameEvent, vec, Vector } from 'excalibur';
 import { attachActorToActor, tilePos, zero } from '../utils';
+import { Item } from './item';
 import { ITile } from './tile';
 import { Truck } from './truck';
 
@@ -12,7 +13,7 @@ export enum ESide {
 
 export class BasicRouteNode extends Actor implements ITile {
   // TODO: replace actor with BasicItem
-  items = <Actor[]>[];
+  items = <Item[]>[];
   bayTruckCallback?: () => void;
 
   constructor(private routeNode: { tile: Vector; side: ESide }) {
@@ -40,17 +41,20 @@ export class BasicRouteNode extends Actor implements ITile {
 
   /** reposition items based on actor rotation */
   private organizeItems() {
-    const offset = vec([8, 0][this.side % 2], [0, 8][this.side % 2]);
+    const offset = vec([8, 0][this.side % 2]!, [0, 8][this.side % 2]!);
     this.items.map((item, i) => {
       attachActorToActor(item, this);
       item.pos = offset.scale(i).add(vec(2, 2));
     });
   }
 
+  /**
+   * @param index undefined means last pushed item
+   * @returns the removed item, or undefined if empty or index invalid
+   */
   popItem(index?: number) {
     index = index ?? this.items.length - 1;
     const item = this.items[index];
-
     if (item) {
       this.items.splice(index, 1);
       item.visible = false;

@@ -130,7 +130,7 @@ export class Truck extends Actor {
     ctx.pickUp.bay.popItem(ctx.pickUp.bay.items.indexOf(item));
     item.kill();
     // display a tick over the item
-    ctx.pickUp.items[i].isGot = true;
+    ctx.pickUp.items[i]!.isGot = true;
 
     if (this.gotAllItems(ctx)) {
       // TODO: track score in packages shipped
