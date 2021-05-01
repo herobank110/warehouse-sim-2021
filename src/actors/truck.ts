@@ -108,6 +108,15 @@ export class Truck extends Actor {
     [...ctx.pickUp.bay.items].map(item => this.tryLoadItem(ctx, item));
   }
 
+  public canLoadItem(item: Item) {
+    return (
+      this.purpose instanceof PickUp &&
+      this.purpose.pickUp.items.findIndex(
+        it => !it.isGot && it.item.constructor == item.constructor,
+      ) != -1
+    );
+  }
+
   /** @returns whether the item was loaded */
   private tryLoadItem(ctx: PickUp, item: Item) {
     const i = ctx.pickUp.items.findIndex(
