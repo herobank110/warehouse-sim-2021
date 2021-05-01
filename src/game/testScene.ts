@@ -34,7 +34,7 @@ function endDrag(to: Actor) {
 function loopTrucks() {
   const scene = warehouseGlobals.game.currentScene;
 
-  const bay = srBays[0];
+  const bay = srBays[0]!;
   scene.add(
     new Truck(
       Math.random() < 0.6
@@ -57,7 +57,7 @@ function loopTrucks() {
 }
 
 function randomItemClass(): new () => Item {
-  return [Square, Triangle, Triangle][Math.floor(Math.random() * 2)];
+  return [Square, Triangle, Triangle][Math.floor(Math.random() * 2)]!;
 }
 
 export default (game: Engine) => {
