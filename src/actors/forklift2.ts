@@ -32,20 +32,26 @@ export class Forklift extends Actor {
       color: ctor.color, // will this tint textures? just need to store it to draw path lines
     });
 
+    // assignment for typescript to realized its initialized
     this.route = this.initRoute(ctor.route);
-    this.mainLoop();
   }
 
-  private initRoute(route: Route): RouteRunner {
-    // immediate position at srBay
-    this.pos = route.srBay.pos.clone();
-    this.onReachedNode(route.srBay);
+  private initRoute(route: Route) {
     // initially direction is actually srBayToShelf but its like using -1 turn
     // index, it will then be reversed!
-    return { ...route, direction: RouteDirection.shelfToSrBay };
+    this.route = { ...route, direction: RouteDirection.shelfToSrBay };
+
+    // immediate position at srBay
+    this.pos = route.srBay.pos.clone();
+
+    this.onReachedNode(route.srBay);
+    this.mainLoop();
+
+    return this.route;
   }
 
   private mainLoop() {
+    this.actions.clearActions();
     this.followPath(this.actions);
     this.actions.callMethod(() => this.onReachedNode(this.endNode));
   }
@@ -82,21 +88,24 @@ export class Forklift extends Actor {
 
   private tryLoad(node: RouteNode) {
     const srBay = this.route.srBay;
-    if (
-      !this.item &&
-      (node instanceof SrBay ||
-        (node instanceof Shelf && srBay.dockedTruck?.purpose instanceof PickUp))
-    ) {
-      // pick an item the truck wants, if any
-      this.item = srBay.popItem(
-        srBay.items.findIndex(item => srBay.dockedTruck?.canLoadItem(item)),
-      );
+    if (!this.item) {
+      if (node instanceof SrBay) {
+        this.item = node.popItem();
+      } else if (
+        node instanceof Shelf &&
+        srBay.dockedTruck?.purpose instanceof PickUp
+      ) {
+        // pick an item the truck wants, if any
+        this.item = node.popItem(
+          node.items.findIndex(item => srBay.dockedTruck?.canLoadItem(item)),
+        );
+      }
     }
   }
 
-  static makePath(route: Route) {
+  static makePath(srBay: SrBay, shelf: Shelf) {
     // simple lerp route
-    return [(route.shelf.pos.clone(), route.srBay.pos.clone())];
+    return [srBay.pos.clone(), shelf.pos.clone()];
   }
 
   get item() {

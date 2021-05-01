@@ -1,5 +1,6 @@
 import { Scene, Engine, Actor, Color, vec } from 'excalibur';
-import { tryDispatchForklift } from '../actors/forklift';
+import { Forklift } from '../actors/forklift2';
+// import { tryDispatchForklift } from '../actors/forklift';
 import { GettableItem, Item, Square, Triangle } from '../actors/item';
 import {
   BasicRouteNode,
@@ -17,6 +18,7 @@ let dragFrom: RouteNode | undefined;
 const shelves: Shelf[] = [];
 const srBays: SrBay[] = [];
 
+// TODO: replace excalibur dragging with simple html dropdown of srbay and shelf number
 function startDrag(from: Actor) {
   if (from instanceof BasicRouteNode) {
     dragFrom = from;
@@ -26,7 +28,7 @@ function startDrag(from: Actor) {
 function endDrag(to: Actor) {
   // if (dragFrom && to instanceof Shelf && shelves.includes(to)) {
   if (dragFrom && to instanceof BasicRouteNode) {
-    tryDispatchForklift([dragFrom, to]);
+    // tryDispatchForklift([dragFrom, to]);
   }
   dragFrom = undefined;
 }
@@ -78,6 +80,17 @@ export default (game: Engine) => {
   });
 
   [...srBays, ...shelves].map(i => scene.add(i));
+
+  scene.add(
+    new Forklift({
+      route: {
+        shelf: shelves[0]!,
+        srBay: srBays[0]!,
+        path: Forklift.makePath(srBays[0]!, shelves[0]!),
+      },
+      color: Color.Red,
+    }),
+  );
 
   setTimeout(() => loopTrucks(), 1000);
   scene.camera.pos.setTo(100, 100);
