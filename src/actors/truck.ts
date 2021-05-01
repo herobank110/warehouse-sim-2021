@@ -7,12 +7,13 @@ import {
   vec,
   Vector,
 } from 'excalibur';
-import { addItemToArray } from 'excalibur/dist/Util';
 import { R, tilePos, attachActorToActor } from '../utils';
-import { BasicItem, GettableItem, Item } from './item';
+import { GettableItem, Item } from './item';
 import { SrBay } from './routeNode';
 
 const truckSprite = new Sprite(R.texture.truck, 0, 0, 59, 15);
+
+export type TruckState = PickUp | DropOff;
 
 export class PickUp {
   constructor(
@@ -31,8 +32,6 @@ export class DropOff {
     },
   ) {}
 }
-
-export type TruckState = PickUp | DropOff;
 
 /**
  * Trucks are single use!
@@ -73,11 +72,13 @@ export class Truck extends Actor {
 
   /** slowly remove items one by one into the current bay.*/
   private offload(ctx: DropOff) {
+    console.log('offloading!');
+    
     const delay = 750;
     ctx.dropOff.items.map((_, i) =>
       setTimeout(() => {
         // pop one item into bay
-        const item = ctx.dropOff.items.shift();
+        const item = ctx.dropOff.items.pop();
         if (!item) throw new Error('truck offload items out of bounds');
         ctx.dropOff.bay.pushItem(item);
         this.organizeItems(ctx.dropOff.items);

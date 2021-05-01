@@ -13,7 +13,7 @@ export enum ESide {
 
 export class BasicRouteNode extends Actor implements ITile {
   // TODO: replace actor with BasicItem
-  items = <Item[]>[];
+  items: Item[] = [];
   bayTruckCallback?: () => void;
 
   constructor(private routeNode: { tile: Vector; side: ESide }) {
