@@ -1,4 +1,4 @@
-import { Color, Texture } from 'excalibur';
+import { Color, Sound, Texture } from 'excalibur';
 // @ts-ignore
 import truckUrl from 'url:../../res/truck.png';
 // @ts-ignore
@@ -11,6 +11,8 @@ import triangleUrl from 'url:../../res/triangle.png';
 import tickUrl from 'url:../../res/tick.png';
 // @ts-ignore
 import suitcaseUrl from 'url:../../res/suitcase.png';
+// @ts-ignore
+import musicUrl from 'url:../../res/music.mp3';
 
 export const R = {
   texture: {
@@ -20,6 +22,9 @@ export const R = {
     triangle: new Texture(triangleUrl),
     tick: new Texture(tickUrl),
     suitcase: new Texture(suitcaseUrl),
+  } as const,
+  sound: {
+    music: new Sound(musicUrl),
   } as const,
   color: {
     bg: Color.White,

@@ -5,7 +5,7 @@ import logoUrl from 'url:../../res/logo.png';
 
 export default class extends Loader {
   constructor() {
-    super(Object.values(R.texture));
+    super([...Object.values(R.texture), ...Object.values(R.sound)]);
     this.playButtonText = 'Start';
     this.logo = logoUrl;
     this.backgroundColor = R.color.bg.toHex();
