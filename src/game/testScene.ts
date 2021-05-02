@@ -92,7 +92,11 @@ export default (game: Engine) => {
     scene.add(s);
     s.on('pointerdown', e => onNodeClicked(e.target as RouteNode));
   });
-  setTimeout(newForklift, 1000);
+  setTimeout(newForklift, 10);
+
+  warehouseGlobals.onScoreChanged = () => {
+    console.log('score is now', warehouseGlobals.score);
+  };
 
   setTimeout(() => loopTrucks(), 1000);
   scene.camera.pos.setTo(100, 100);

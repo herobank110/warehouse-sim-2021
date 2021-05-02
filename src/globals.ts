@@ -13,5 +13,5 @@ export const warehouseGlobals = {
     forklifts: [] as Forklift[],
   },
   score: 0,
-  onScoreChanged: () => void 0,
+  onScoreChanged: () => {},
 };
