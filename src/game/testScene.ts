@@ -85,16 +85,16 @@ export default (game: Engine) => {
 
   [...srBays, ...shelves].map(i => scene.add(i));
 
-  // scene.add(
-  //   new Forklift({
-  //     route: {
-  //       shelf: shelves[0]!,
-  //       srBay: srBays[0]!,
-  //       path: Forklift.makePath(srBays[0]!, shelves[0]!),
-  //     },
-  //     color: Color.Red,
-  //   }),
-  // );
+  scene.add(
+    new Forklift({
+      route: {
+        shelf: shelves[0]!,
+        srBay: srBays[0]!,
+        path: Forklift.makePath(srBays[0]!, shelves[0]!),
+      },
+      color: Color.Red,
+    }),
+  );
 
   setTimeout(() => loopTrucks(), 1000);
   scene.camera.pos.setTo(100, 100);
