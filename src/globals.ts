@@ -12,4 +12,5 @@ export const warehouseGlobals = {
     shelves: [] as Shelf[],
     forklifts: [] as Forklift[],
   },
+  score: 0,
 };
