@@ -4,7 +4,7 @@ import { GettableItem, Item, Square, Triangle } from '../actors/item';
 import { ESide, RouteNode, Shelf, SrBay } from '../actors/routeNode';
 import { DropOff, PickUp, Truck } from '../actors/truck';
 import { warehouseGlobals } from '../globals';
-import { iota, lerp1 } from '../utils';
+import { iota, lerp1, R } from '../utils';
 import { makeRouteScreen } from '../ui/routeScreen';
 import $ from 'jquery';
 import { makeHudStrip } from '../ui/hudStrip';
@@ -26,11 +26,11 @@ function onNodeClicked(node: RouteNode) {
     if (node instanceof SrBay) {
       const i = warehouseGlobals.world.srBays.indexOf(node);
       warehouseGlobals.ui.route.srBay = i;
-      $('#route-srbay').text(`Bay ${i + 1}`);
+      $(`#${R.id.routeSrBay}`).text(`Bay ${i + 1}`);
     } else if (node instanceof Shelf) {
       const i = warehouseGlobals.world.shelves.indexOf(node);
       warehouseGlobals.ui.route.shelf = i;
-      $('#route-shelf').text(`Shelf ${i + 1}`);
+      $(`#${R.id.routeShelf}`).text(`Shelf ${i + 1}`);
     }
   }
 }
