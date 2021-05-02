@@ -1,22 +1,27 @@
 import $ from 'jquery';
+import { Shelf, SrBay } from '../actors/routeNode';
 import { warehouseGlobals } from '../globals';
 import { makeUiOverlay } from '../utils/ui';
 
-export function makeRouteScreen() {
-  const html = makeRouteScreenUi({
-    onAccept: () => {
-      const route = warehouseGlobals.ui.route;
-      if (!route) throw new Error('route invalid state');
-      if (route.srBay != -1 && route.srBay != -1) {
-        route.html.remove();
-        // TODO: add forklift of specified route
-        console.log('accepted', route.srBay, 'to', route.shelf);
-      }
-    },
+export const makeRouteScreen = () =>
+  new Promise<{ srBay: SrBay; shelf: Shelf }>(resolve => {
+    const html = makeRouteScreenUi({
+      onAccept: () => {
+        const route = warehouseGlobals.ui.route;
+        if (!route) throw new Error('route invalid state');
+        if (route.srBay != -1 && route.shelf != -1) {
+          route.html.remove();
+          warehouseGlobals.ui.route = undefined;
+          resolve({
+            srBay: warehouseGlobals.world.srBays[route.srBay]!,
+            shelf: warehouseGlobals.world.shelves[route.shelf]!,
+          });
+        }
+      },
+    });
+    warehouseGlobals.ui.route = { html, srBay: -1, shelf: -1 };
+    $('body').append(html);
   });
-  warehouseGlobals.ui.route = { html, srBay: -1, shelf: -1 };
-  $('body').append(html);
-}
 
 const makeRouteScreenUi = (data: { onAccept: () => void }) =>
   makeUiOverlay()

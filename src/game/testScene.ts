@@ -90,18 +90,18 @@ export default (game: Engine) => {
   });
 
   [...srBays, ...shelves].map(i => scene.add(i));
+  warehouseGlobals.world.srBays = srBays;
+  warehouseGlobals.world.shelves = shelves;
 
-  makeRouteScreen();
-  // scene.add(
-  //   new Forklift({
-  //     route: {
-  //       shelf: shelves[0]!,
-  //       srBay: srBays[0]!,
-  //       path: Forklift.makePath(srBays[0]!, shelves[0]!),
-  //     },
-  //     color: Color.Red,
-  //   }),
-  // );
+  (async () => {
+    const { srBay, shelf } = await makeRouteScreen();
+    const f = new Forklift({
+      route: { srBay, shelf, path: Forklift.makePath(srBay, shelf) },
+      color: Color.Red,
+    });
+    warehouseGlobals.world.forklifts.push(f);
+    scene.add(f);
+  })();
 
   setTimeout(() => loopTrucks(), 1000);
   scene.camera.pos.setTo(100, 100);
