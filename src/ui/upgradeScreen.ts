@@ -28,7 +28,7 @@ const makeUpgradeCard = (data: {
 }) =>
   $('<div>', { class: 'upgrade-card' }).append(
     $('<div>', { css: { backgroundImage: `url('${data.img}')` } }),
-    $('<p>', { html: data.name }),
+    $('<p>', { text: data.name }),
     $('<span>', { text: `${data.have} / ${data.total}` }),
     $('<button>', { text: 'Choose', disabled: data.have >= data.total }).on('click', () =>
       data.onPick(),
@@ -47,7 +47,7 @@ const makeUpgradeScreenUi = (data: { onPick: (type: EUpgrade) => void }) =>
       $('<h3>', { text: 'Pick an upgrade' }),
       $('<div>').append(
         makeUpgradeCard({
-          name: 'Shipping &<br>Receiving Bay',
+          name: 'Shipping & Receiving Bay',
           img: '',
           have: warehouseGlobals.world.srBays.length,
           total: 5,
