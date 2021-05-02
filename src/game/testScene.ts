@@ -67,7 +67,8 @@ function loopTrucks() {
       ),
     );
   }
-  setTimeout(loopTrucks, lerp1(15_000, 20_000, Math.random()));
+  // setTimeout(loopTrucks, lerp1(15_000, 20_000, Math.random()));
+  setTimeout(loopTrucks, 1000);
 }
 
 function randomItemClass(): new () => Item {
@@ -147,7 +148,7 @@ export default (game: Engine) => {
 
   // TODO: show main menu screen
   setTimeout(newForklift, 10);
-  setTimeout(() => loopTrucks(), 1000);
+  setTimeout(loopTrucks, 1000);
 
   game.on('postupdate', e => {
     // TODO: check for game over condition
