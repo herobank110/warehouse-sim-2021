@@ -14,7 +14,7 @@ const makeHudStripUi = () =>
         $('<div>').append(
           $('<div>', { css: { backgroundImage: `url('${R.texture.suitcase.path}')` } }),
           $('<span>', { id: R.id.hudItemsNow, text: '0' }),
-          $('<span>', { text: '🡒' }),
+          $('<span>', { text: ' >> ' }),
           $('<span>', { id: R.id.hudItemsNext,text: '10' }),
         ),
       ),
