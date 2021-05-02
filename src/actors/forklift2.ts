@@ -1,4 +1,4 @@
-import { ActionContext, Actor, Color, Engine, vec, Vector } from 'excalibur';
+import { ActionContext, Actor, Color, vec, Vector } from 'excalibur';
 import { warehouseGlobals } from '../globals';
 import { Item } from './item';
 import { RouteNode, Shelf, SrBay } from './routeNode';
@@ -42,12 +42,17 @@ export class Forklift extends Actor {
   }
 
   onPostDraw(ctx: CanvasRenderingContext2D, delta: number) {
+    const [begin, ...p2] = this.route.path
+      .map(v => v.sub(this.pos)) // ctx is relative to the actor position!
+      .map(v => warehouseGlobals.game.worldToScreenCoordinates(v))
+      .map(v => v.scale(0.5))
+      // .map(v => vec(Math.floor(v.x), Math.floor(v.y)));
+    if (!begin || p2.length == 0) throw new Error('path must be at least 2');
+
     ctx.strokeStyle = this.color.toHex();
     ctx.beginPath();
-    const p = warehouseGlobals.game.worldToScreenCoordinates(this.pos);
-    // this is relative to the actor position!
-    ctx.moveTo(10, 10)
-    ctx.lineTo(20, 20);
+    ctx.moveTo(begin.x, begin.y);
+    p2.map(v => ctx.lineTo(v.x, v.y));
     ctx.stroke();
     super.onPostDraw(ctx, delta);
   }
