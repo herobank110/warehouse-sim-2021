@@ -35,19 +35,21 @@ function onNodeClicked(node: RouteNode) {
 }
 
 function loopTrucks() {
-  const bay = warehouseGlobals.world.srBays[0]!;
-  if (!bay.dockedTruck) {
+  const bay = warehouseGlobals.world.srBays.find(bay => !bay.dockedTruck);
+  if (bay) {
     warehouseGlobals.game.add(
+      // TODO: increase items max to 3 if score high
+      // TODO: only spawn pickup for items that exist (why else would you schedule a pickup?!)
       new Truck(
         Math.random() < 0.6
           ? new DropOff({
-              items: iota(lerp1(1, 4, Math.random())).map(
+              items: iota(lerp1(1, 2, Math.random())).map(
                 () => new (randomItemClass())(),
               ),
               bay,
             })
           : new PickUp({
-              items: iota(lerp1(1, 4, Math.random())).map(
+              items: iota(lerp1(1, 2, Math.random())).map(
                 () => new GettableItem(randomItemClass()),
               ),
               bay,
@@ -55,7 +57,7 @@ function loopTrucks() {
       ),
     );
   }
-  setTimeout(loopTrucks, lerp1(10000, 15000, Math.random()));
+  setTimeout(loopTrucks, lerp1(15_000, 20_000, Math.random()));
 }
 
 function randomItemClass(): new () => Item {
