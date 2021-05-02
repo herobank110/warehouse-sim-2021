@@ -10,7 +10,7 @@ import $ from 'jquery';
 import { makeHudStrip } from '../ui/hudStrip';
 import { EUpgrade, makeUpgradeScreen } from '../ui/upgradeScreen';
 
-const badTimeGameEnd = 3;
+const badTimeGameEnd = 10_000;
 
 function setIsPaused(newPaused: boolean) {
   warehouseGlobals.game.timescale = newPaused ? 0.001 : 1;
@@ -104,6 +104,8 @@ function unlockFirstNode(arr: RouteNode[]) {
 function checkGameOver(delta: number) {
   const { srBays, shelves, baddies } = warehouseGlobals.world;
   const newBad = [...srBays, ...shelves].filter(s => s.items.length > 3);
+
+  // process current baddies
   newBad.map(node => {
     const oldBad = baddies.find(s2 => s2.node == node);
     if (!oldBad) {
@@ -116,12 +118,15 @@ function checkGameOver(delta: number) {
       baddies.push({ node, time: 0, blinker });
     } else {
       oldBad.time += delta;
+      console.log(oldBad.time);
+      
       if (oldBad.time > badTimeGameEnd) {
         gameEnd();
       }
     }
   });
-  // TODO: remove baddies if no longer bad
+
+  // remove old baddies if no longer bad
   warehouseGlobals.world.baddies = baddies.filter(bad => {
     if (newBad.includes(bad.node)) {
       return true;
