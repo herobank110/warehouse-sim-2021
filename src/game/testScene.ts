@@ -7,6 +7,7 @@ import { warehouseGlobals } from '../globals';
 import { iota, lerp1 } from '../utils';
 import { makeRouteScreen } from '../ui/routeScreen';
 import $ from 'jquery';
+import { makeHudStrip } from '../ui/hudStrip';
 
 async function newForklift() {
   warehouseGlobals.game.timescale = 0.001;
@@ -92,15 +93,17 @@ export default (game: Engine) => {
     scene.add(s);
     s.on('pointerdown', e => onNodeClicked(e.target as RouteNode));
   });
-  setTimeout(newForklift, 10);
 
   warehouseGlobals.onScoreChanged = () => {
     console.log('score is now', warehouseGlobals.score);
   };
-
-  setTimeout(() => loopTrucks(), 1000);
   scene.camera.pos.setTo(100, 100);
   scene.camera.zoom(2);
+
+  makeHudStrip();
+
+  setTimeout(newForklift, 10);
+  setTimeout(() => loopTrucks(), 1000);
 
   return scene;
 };
