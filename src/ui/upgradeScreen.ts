@@ -42,7 +42,7 @@ const makeUpgradeScreenUi = (data: { onPick: (type: EUpgrade) => void }) =>
       $('<h2>').append(
         $('<span>', { text: warehouseGlobals.score }),
         $('<div>', { css: { backgroundImage: `url('${R.texture.suitcase.path}')` } }),
-        $('<span>', { text: ' delivered!' }),
+        $('<span>', { text: 'items delivered!' }),
       ),
       $('<h3>', { text: 'Pick an upgrade' }),
       $('<div>').append(

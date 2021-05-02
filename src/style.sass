@@ -60,13 +60,16 @@ p
   $pad: 2px
   $pad-x: 1.2
   $pad-t: 0.05s
-  box-shadow: $pad * $pad-x $pad 0 ($pad / 2) lighten(black, 30%)
-  transition: transform $pad-t, box-shadow $pad-t
-  &:hover
-    @include grad-bg(white)
-  &:active
+  &:not(:disabled)
+    box-shadow: $pad * $pad-x $pad 0 ($pad / 2) lighten(black, 30%)
+    transition: transform $pad-t, box-shadow $pad-t
+    &:hover
+      @include grad-bg(white)
+  &:is(:active, :disabled)
     transform: translate($pad * $pad-x, $pad)
     box-shadow: none
+  &:disabled
+    background: darken(white, 10%)
 
 @mixin my-button--primary
   transition: none // darkness makes animation look bad
@@ -117,10 +120,41 @@ p
         display: inline-block
         background: center / cover
         image-rendering: pixelated
-        width:  16px
+        width: 16px
         height: 16px
 
 .upgrade-screen
   background: white
-    
-  
+  text-align: center
+  &>h2
+    margin-top: 40px
+    &>div
+      display: inline-block
+      background: center / cover
+      image-rendering: pixelated
+      width:  32px
+      height: 32px
+      margin: -4px 7px
+  &>h3
+    margin-top: 50px
+  &>div
+    display: grid
+    grid-template-columns: repeat(3, 1fr)
+    column-gap: 10px
+    margin: 10px
+    .upgrade-card
+      display: grid
+      grid-template-rows: auto 1fr auto auto
+      text-align: center
+      border: 1px solid $fg
+      border-radius: 10px
+      &>div
+        display: inline-block
+        background: center / cover
+        image-rendering: pixelated
+        width: 28px
+        height: 28px
+      &>button
+        margin: 10px
+        margin-top: 20px
+        @include my-button
