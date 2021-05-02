@@ -51,10 +51,12 @@ export class Forklift extends Actor {
 
     const ctx = document.querySelector('canvas')?.getContext('2d')!;
 
-    ctx.strokeStyle = this.color.toHex();
+    const c = this.color.clone();
+    c.a = 0.5;
+    ctx.strokeStyle = c.toHex();
     // using dashed thin line almost masks the vibration of excalibur
     ctx.lineWidth = 0.3;
-    ctx.setLineDash([1, 5])
+    ctx.setLineDash([1, 5]);
     ctx.beginPath();
     ctx.moveTo(begin.x, begin.y);
     p2.map(v => ctx.lineTo(v.x, v.y));
