@@ -7,6 +7,7 @@ import {
   vec,
   Vector,
 } from 'excalibur';
+import { warehouseGlobals } from '../globals';
 import { R, tilePos, attachActorToActor } from '../utils';
 import { GettableItem, Item } from './item';
 import { SrBay } from './routeNode';
@@ -141,7 +142,9 @@ export class Truck extends Actor {
     ctx.pickUp.items[i]!.isGot = true;
 
     if (this.gotAllItems(ctx)) {
-      // TODO: track score in packages shipped
+      // track score in packages shipped
+      warehouseGlobals.score += ctx.pickUp.items.length;
+      warehouseGlobals.onScoreChanged();
       ctx.pickUp.bay.dockedTruck = undefined;
       ctx.pickUp.bay.bayTruckCallback = undefined;
       this.depart(ctx.pickUp.bay);
