@@ -38,7 +38,7 @@ export function tilePos(tile: TileIndex | Vector, anchor: TileAnchor = 'tl') {
   ret.addEqual(
     {
       center: vec(14, 14),
-      top: vec(0, 14),
+      top: vec(14, 0),
       bottom: vec(0, 28),
       left: vec(0, 14),
       right: vec(28, 14),
