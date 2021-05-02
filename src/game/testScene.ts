@@ -68,17 +68,23 @@ export default (game: Engine) => {
   const scene = new Scene(game);
 
   const { srBays, shelves } = warehouseGlobals.world;
-  srBays.push(new SrBay({ tile: vec(0, 0), side: ESide.left }));
+  srBays.push(
+    new SrBay({ tile: vec(0, 0), side: ESide.left }),
+    new SrBay({ tile: vec(0, 1), side: ESide.left }),
+    new SrBay({ tile: vec(0, 2), side: ESide.left }),
+  );
   shelves.push(
     new Shelf({ tile: vec(1, 0), side: ESide.top }),
     new Shelf({ tile: vec(1, 1), side: ESide.top }),
   );
 
+  srBays.map((s, i) => (s.unlocked = i < 1));
+  shelves.map((s, i) => (s.unlocked = i < 2));
+
   [...srBays, ...shelves].map(s => {
     s.on('pointerdown', e => onNodeClicked(e.target as RouteNode));
+    scene.add(s);
   });
-
-  [...srBays, ...shelves].map(i => scene.add(i));
   // setTimeout(newForklift, 3000);
 
   setTimeout(() => loopTrucks(), 1000);
