@@ -122,10 +122,13 @@ function checkGameOver(delta: number) {
     }
   });
   // TODO: remove baddies if no longer bad
-  warehouseGlobals.world.baddies = 
-  baddies.filter(bad =>  {
-    bad.node
-  })
+  warehouseGlobals.world.baddies = baddies.filter(bad => {
+    if (newBad.includes(bad.node)) {
+      return true;
+    }
+    bad.blinker.kill();
+    return false;
+  });
 }
 
 function gameEnd() {}
