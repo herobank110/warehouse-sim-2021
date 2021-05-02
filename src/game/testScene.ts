@@ -99,6 +99,11 @@ function unlockFirstNode(arr: RouteNode[]) {
   }
 }
 
+function checkGameOver(delta: number) {
+  const { srBays, shelves } = warehouseGlobals.world;
+  const bad = [...srBays, ...shelves].filter(s => s.items.length > 3);
+}
+
 export default (game: Engine) => {
   const scene = new Scene(game);
 
@@ -151,8 +156,7 @@ export default (game: Engine) => {
   setTimeout(loopTrucks, 1000);
 
   game.on('postupdate', e => {
-    // TODO: check for game over condition
-    // console.log(e.delta);
+    checkGameOver(e.delta);
   });
 
   return scene;
