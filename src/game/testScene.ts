@@ -102,6 +102,7 @@ export default (game: Engine) => {
   warehouseGlobals.onScoreChanged = () => {
     const score = warehouseGlobals.score;
     $(`#${R.id.hudItemsNow}`).text(score);
+    $(`#${R.id.hudItemsNext}`).text(Math.floor(score / 10) * 10 + 10);
   };
 
   setTimeout(newForklift, 10);
