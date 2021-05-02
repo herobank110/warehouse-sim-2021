@@ -1,15 +1,15 @@
 import { ActionContext, Actor, Color, vec, Vector } from 'excalibur';
 import { warehouseGlobals } from '../globals';
-import { tilePos } from '../utils';
 import { Item } from './item';
 import { RouteNode, Shelf, SrBay } from './routeNode';
+import { routePathMap } from './routePathMap';
 import { PickUp } from './truck';
 
 type SrBayIndex = 0 | 1 | 2 | 3;
 type ShelfIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
-type RouteIndexicalSymbol = `srbay${SrBayIndex}_shelf${ShelfIndex}`;
+export type RouteIndexicalSymbol = `srbay${SrBayIndex}_shelf${ShelfIndex}`;
 
-type RoutePath = Vector[];
+export type RoutePath = Vector[];
 
 enum RouteDirection {
   srBayToShelf,
@@ -25,14 +25,6 @@ type Route = {
 type RouteRunner = Route & {
   direction: RouteDirection;
 };
-
-const routePathMap: Record<RouteIndexicalSymbol, RoutePath> = {
-  srbay0_shelf0: [
-    tilePos(vec(0, 0)).add(vec(14, 14)),
-    tilePos(vec(1, 0)).add(vec(14, 14)),
-  ],
-  // srbay0_shelf1: [],
-} as const;
 
 export class Forklift extends Actor {
   private item_?: Item;
