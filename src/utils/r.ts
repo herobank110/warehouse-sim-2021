@@ -22,4 +22,5 @@ export const R = {
     bg: Color.White,
     fg: Color.fromHex('afafaf'),
   } as const,
+  viewportSize: { width: 400, height: 400 } as const,
 } as const;

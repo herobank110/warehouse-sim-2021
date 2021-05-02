@@ -1,10 +1,11 @@
 body
   margin: 0
   background: lighten(black, 10%)
-  display: grid
-  place-items: center
-  height: 100vh
-  overflow: hidden
+  &.center
+    display: grid
+    place-items: center
+    height: 100vh
+    overflow: hidden
 
 #excalibur-play-root > #excalibur-play
   $bg: #afafaf
@@ -12,3 +13,13 @@ body
   border-radius: 99px
   &:is(:hover, :active, :focus)
     background: darken($bg, 8%)
+
+.ui-overlay
+  position: absolute
+  top: 0
+  left: 0
+
+.route-screen
+  background: white
+  & p
+    padding: 20px

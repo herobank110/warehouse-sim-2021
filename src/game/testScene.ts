@@ -1,17 +1,12 @@
 import { Scene, Engine, Actor, Color, vec } from 'excalibur';
 import { Forklift } from '../actors/forklift2';
-// import { tryDispatchForklift } from '../actors/forklift';
 import { GettableItem, Item, Square, Triangle } from '../actors/item';
-import {
-  BasicRouteNode,
-  ESide,
-  RouteNode,
-  Shelf,
-  SrBay,
-} from '../actors/routeNode';
+import { BasicRouteNode, ESide, RouteNode, Shelf, SrBay } from '../actors/routeNode';
 import { DropOff, PickUp, Truck } from '../actors/truck';
 import { warehouseGlobals } from '../globals';
 import { iota, lerp1 } from '../utils';
+import { makeRouteScreen } from '../ui/routeScreen';
+import $ from 'jquery';
 
 // game state
 let dragFrom: RouteNode | undefined;
@@ -45,9 +40,7 @@ function loopTrucks() {
     new Truck(
       Math.random() < 0.6
         ? new DropOff({
-            items: iota(lerp1(1, 4, Math.random())).map(
-              i => new (randomItemClass())(),
-            ),
+            items: iota(lerp1(1, 4, Math.random())).map(i => new (randomItemClass())()),
             bay,
           })
         : new PickUp({
@@ -85,16 +78,17 @@ export default (game: Engine) => {
 
   [...srBays, ...shelves].map(i => scene.add(i));
 
-  scene.add(
-    new Forklift({
-      route: {
-        shelf: shelves[0]!,
-        srBay: srBays[0]!,
-        path: Forklift.makePath(srBays[0]!, shelves[0]!),
-      },
-      color: Color.Red,
-    }),
-  );
+  $('body').append(makeRouteScreen());
+  // scene.add(
+  //   new Forklift({
+  //     route: {
+  //       shelf: shelves[0]!,
+  //       srBay: srBays[0]!,
+  //       path: Forklift.makePath(srBays[0]!, shelves[0]!),
+  //     },
+  //     color: Color.Red,
+  //   }),
+  // );
 
   setTimeout(() => loopTrucks(), 1000);
   scene.camera.pos.setTo(100, 100);
