@@ -142,13 +142,11 @@ export default (game: Engine) => {
     }
   };
 
-  warehouseGlobals.score = 10;
-  warehouseGlobals.onScoreChanged();
-
   R.sound.music.loop = true;
   R.sound.music.play();
 
-  // setTimeout(newForklift, 10);
+  // TODO: show main menu screen
+  setTimeout(newForklift, 10);
   setTimeout(() => loopTrucks(), 1000);
 
   return scene;
