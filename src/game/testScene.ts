@@ -1,14 +1,16 @@
-import { Scene, Engine, Color, vec } from 'excalibur';
+import { Scene, Engine, Color, vec, Actor } from 'excalibur';
 import { Forklift } from '../actors/forklift2';
 import { GettableItem, Item, Square, Triangle } from '../actors/item';
 import { ESide, RouteNode, Shelf, SrBay } from '../actors/routeNode';
 import { DropOff, PickUp, Truck } from '../actors/truck';
 import { warehouseGlobals } from '../globals';
-import { iota, lerp1, R } from '../utils';
+import { iota, lerp1, R, tilePos } from '../utils';
 import { makeRouteScreen } from '../ui/routeScreen';
 import $ from 'jquery';
 import { makeHudStrip } from '../ui/hudStrip';
 import { EUpgrade, makeUpgradeScreen } from '../ui/upgradeScreen';
+
+const badTimeGameEnd = 3;
 
 function setIsPaused(newPaused: boolean) {
   warehouseGlobals.game.timescale = newPaused ? 0.001 : 1;
@@ -100,9 +102,27 @@ function unlockFirstNode(arr: RouteNode[]) {
 }
 
 function checkGameOver(delta: number) {
-  const { srBays, shelves } = warehouseGlobals.world;
-  const bad = [...srBays, ...shelves].filter(s => s.items.length > 3);
+  const { srBays, shelves, baddies } = warehouseGlobals.world;
+  const newBad = [...srBays, ...shelves].filter(s => s.items.length > 3);
+  newBad.map(node => {
+    const oldBad = baddies.find(s2 => s2.node == node);
+    if (!oldBad) {
+      const blinker = new Actor({
+        pos: tilePos(node.tile, 'ctl'),
+        currentDrawing: undefined
+      })
+      blinker.actions.blink(250, 250);
+      baddies.push({ node, time: 0, blinker })
+    } else {
+      oldBad.time += delta;
+      if (oldBad.time > badTimeGameEnd) {
+        gameEnd();
+      }
+    }
+  });
 }
+
+function gameEnd() {}
 
 export default (game: Engine) => {
   const scene = new Scene(game);

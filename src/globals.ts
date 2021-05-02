@@ -1,4 +1,4 @@
-import { Engine } from 'excalibur';
+import { Actor, Engine } from 'excalibur';
 import { Forklift } from './actors/forklift2';
 import { RouteNode, Shelf, SrBay } from './actors/routeNode';
 
@@ -11,7 +11,7 @@ export const warehouseGlobals = {
     srBays: [] as SrBay[],
     shelves: [] as Shelf[],
     forklifts: [] as Forklift[],
-    baddies: [] as { node: RouteNode; time: number }[],
+    baddies: [] as { node: RouteNode; time: number, blinker: Actor }[],
   },
   score: 0,
   onScoreChanged: () => {},
