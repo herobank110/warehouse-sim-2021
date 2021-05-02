@@ -9,7 +9,7 @@ import { makeRouteScreen } from '../ui/routeScreen';
 import $ from 'jquery';
 
 async function newForklift() {
-  warehouseGlobals.game.stop();
+  warehouseGlobals.game.timescale = 0.001;
   const { srBay, shelf } = await makeRouteScreen();
   const f = new Forklift({
     route: { srBay, shelf, path: Forklift.makePath(srBay, shelf) },
@@ -17,10 +17,12 @@ async function newForklift() {
   });
   warehouseGlobals.world.forklifts.push(f);
   warehouseGlobals.game.add(f);
-  warehouseGlobals.game.start();
+  warehouseGlobals.game.timescale = 1;
 }
 
 function onNodeClicked(node: RouteNode) {
+  console.log('hi');
+  
   if (warehouseGlobals.ui.route) {
     if (node instanceof SrBay) {
       const i = warehouseGlobals.world.srBays.indexOf(node);
@@ -72,20 +74,27 @@ export default (game: Engine) => {
     new SrBay({ tile: vec(0, 0), side: ESide.left }),
     new SrBay({ tile: vec(0, 1), side: ESide.left }),
     new SrBay({ tile: vec(0, 2), side: ESide.left }),
+    new SrBay({ tile: vec(0, 3), side: ESide.left }),
   );
   shelves.push(
     new Shelf({ tile: vec(1, 0), side: ESide.top }),
     new Shelf({ tile: vec(1, 1), side: ESide.top }),
+    new Shelf({ tile: vec(1, 2), side: ESide.top }),
+    new Shelf({ tile: vec(1, 3), side: ESide.top }),
+    new Shelf({ tile: vec(2, 0), side: ESide.top }),
+    new Shelf({ tile: vec(2, 1), side: ESide.top }),
+    new Shelf({ tile: vec(2, 2), side: ESide.top }),
+    new Shelf({ tile: vec(2, 3), side: ESide.top }),
   );
 
   srBays.map((s, i) => (s.unlocked = i < 1));
   shelves.map((s, i) => (s.unlocked = i < 2));
 
   [...srBays, ...shelves].map(s => {
-    s.on('pointerdown', e => onNodeClicked(e.target as RouteNode));
     scene.add(s);
+    s.on('pointerdown', e => onNodeClicked(e.target as RouteNode));
   });
-  // setTimeout(newForklift, 3000);
+  setTimeout(newForklift, 1000);
 
   setTimeout(() => loopTrucks(), 1000);
   scene.camera.pos.setTo(100, 100);
