@@ -10,8 +10,12 @@ const makeHudStripUi = () =>
   makeUiOverlay()
     .addClass('hud-strip')
     .append(
-      $('<h2>', { text: 'Warehouse Simulator 2021' }),
-      $('<div>').append(
-        $('<i>', { css: { backgroundImage: `url('${R.texture.suitcase.path}')` } }),
+      $('<h3>', { text: 'Warehouse Simulator 2021' }).append(
+        $('<div>').append(
+          $('<div>', { css: { backgroundImage: `url('${R.texture.suitcase.path}')` } }),
+          $('<span>', { id: 'hud-items-now', text: '0' }),
+          $('<span>', { text: '🡒' }),
+          $('<span>', { id: 'hud-items-next',text: '10' }),
+        ),
       ),
     );
