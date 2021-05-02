@@ -29,12 +29,16 @@ function endDrag(to: Actor) {
 }
 
 function onNodeClicked(node: RouteNode) {
-  if (node instanceof SrBay) {
-    const i = srBays.indexOf(node);
-    $('#route-srbay').text(`Bay ${i + 1}`);
-  } else if (node instanceof Shelf) {
-    const i = shelves.indexOf(node);
-    $('#route-shelf').text(`Shelf ${i + 1}`);
+  if (warehouseGlobals.ui.route) {
+    if (node instanceof SrBay) {
+      const i = srBays.indexOf(node);
+      warehouseGlobals.ui.route.srBay = i;
+      $('#route-srbay').text(`Bay ${i + 1}`);
+    } else if (node instanceof Shelf) {
+      const i = shelves.indexOf(node);
+      warehouseGlobals.ui.route.shelf = i;
+      $('#route-shelf').text(`Shelf ${i + 1}`);
+    }
   }
 }
 
@@ -87,7 +91,7 @@ export default (game: Engine) => {
 
   [...srBays, ...shelves].map(i => scene.add(i));
 
-  $('body').append(makeRouteScreen({ srBays: 1, shelves: 2 }));
+  makeRouteScreen();
   // scene.add(
   //   new Forklift({
   //     route: {
