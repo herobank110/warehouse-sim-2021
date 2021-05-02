@@ -35,7 +35,7 @@ function onNodeClicked(node: RouteNode) {
 }
 
 function loopTrucks() {
-  const bay = warehouseGlobals.world.srBays.find(bay => !bay.dockedTruck);
+  const bay = warehouseGlobals.world.srBays.find(bay => bay.unlocked && !bay.dockedTruck);
   if (bay) {
     warehouseGlobals.game.add(
       // TODO: increase items max to 3 if score high
