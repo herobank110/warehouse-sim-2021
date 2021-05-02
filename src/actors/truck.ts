@@ -40,6 +40,13 @@ export class DropOff {
  * And dies once complete.
  */
 export class Truck extends Actor {
+  private moveTime = -1;
+  private moveStartX = 0;
+  private moveEndX = 0;
+  private moveEasing = EasingFunctions.EaseInCubic;
+  private moveCallback = () => {};
+  private readonly moveDuration = 4000;
+
   constructor(public purpose: TruckState) {
     super();
   }
@@ -67,7 +74,7 @@ export class Truck extends Actor {
       throw new Error('attempted truck drop off with one or no items');
 
     this.organizeItems(ctx.dropOff.items);
-    return this.arrive(ctx.dropOff.bay, () => this.offload(ctx));
+    this.arrive(ctx.dropOff.bay, () => this.offload(ctx));
   }
 
   /** slowly remove items one by one into the current bay.*/
@@ -85,10 +92,7 @@ export class Truck extends Actor {
       }, i * delay),
     );
     // fails if items has zero or one item
-    setTimeout(
-      () => this.depart(ctx.dropOff.bay),
-      ctx.dropOff.items.length * delay,
-    );
+    setTimeout(() => this.depart(ctx.dropOff.bay), ctx.dropOff.items.length * delay);
   }
 
   // pick up
@@ -157,12 +161,12 @@ export class Truck extends Actor {
 
   // helpers
 
-  private arrive(bay: SrBay, fn?: () => void) {
+  private arrive(bay: SrBay, fn: () => void) {
     const bayPos = tilePos(bay.tile);
     const begin = bayPos.clone();
     begin.x = 0; // start off screen
     const end = bayPos.add(vec(-4, 0));
-    return this.drive(begin, end, EasingFunctions.EaseOutCubic, fn);
+    this.drive(begin, end, EasingFunctions.EaseOutCubic, fn);
   }
 
   private depart(bay: SrBay) {
@@ -171,24 +175,36 @@ export class Truck extends Actor {
     const end = bayPos.clone();
     end.x = 0; // start off screen
 
-    return this.drive(begin, end, EasingFunctions.EaseInCubic, () =>
-      this.kill(),
-    );
+    this.drive(begin, end, EasingFunctions.EaseInCubic, () => this.kill());
   }
 
-  /** add a drive to the action queue. */
-  private drive(
-    begin: Vector,
-    end: Vector,
-    easing: EasingFunction,
-    fn?: () => void,
-  ) {
+  /** add a drive to the action queue. (only moves horizontally) */
+  private drive(begin: Vector, end: Vector, easing: EasingFunction, fn: () => void) {
+    this.moveTime = 0;
+    this.moveCallback = fn;
+    this.moveEasing = easing;
     this.pos.setTo(begin.x, begin.y);
-    return this.actions
-      .easeTo(end.x, end.y, driveTime, easing)
-      .callMethod(() => {
-        if (fn) fn();
-      });
+    this.moveStartX = begin.x;
+    this.moveEndX = end.x;
+  }
+
+  onPostUpdate(engine: Engine, delta: number) {
+    super.onPostUpdate(engine, delta);
+
+    if (this.moveTime != -1) {
+      this.moveTime += delta;
+      this.pos.x = this.moveEasing(
+        this.moveTime,
+        this.moveStartX,
+        this.moveEndX,
+        this.moveDuration,
+      );
+      if (Math.abs(this.pos.x - this.moveEndX) < 0.1) {
+        this.pos.x = this.moveEndX;
+        this.moveTime = -1;
+        this.moveCallback();
+      }
+    }
   }
 
   private organizeItems(items: Item[]) {
