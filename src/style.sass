@@ -7,6 +7,11 @@ $fg: #afafaf
   padding: 1em 2em
   box-shadow: 0 $dir 8px 0px darken(white, 50%)
 
+@mixin icon
+  display: inline-block
+  background: center / cover
+  image-rendering: pixelated
+
 body
   margin: 0
   background: lighten(black, 10%)
@@ -128,7 +133,7 @@ p
       display: inline-block
       background: center / cover
       image-rendering: pixelated
-      width:  32px
+      width: 32px
       height: 32px
       margin: -4px 7px
   &>h3
@@ -145,12 +150,22 @@ p
       border: 1px solid $fg
       border-radius: 10px
       &>div
-        display: inline-block
-        background: center / cover
-        image-rendering: pixelated
+        @include icon
         width: 28px
         height: 28px
       &>button
         margin: 10px
         margin-top: 20px
         @include my-button
+
+.game-over-screen
+  background: white
+  text-align: center
+  &>h2
+    margin-top: 40px
+  &>div
+    &>div
+      margin-top: 50px
+  &>button
+    margin-top: 120px
+    @include my-button
