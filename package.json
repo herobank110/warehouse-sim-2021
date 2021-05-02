@@ -10,7 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "excalibur": "^0.24.5",
-    "parcel": "^2.0.0-beta.2"
+    "parcel": "^2.0.0-beta.2",
+    "jquery": "^3.6.0"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,7 @@
     }
   },
   "devDependencies": {
+    "@types/jquery": "^3.5.5",
     "@parcel/transformer-glsl": "^2.0.0-beta.2",
     "@parcel/transformer-image": "^2.0.0-beta.2",
     "@parcel/transformer-sass": "^2.0.0-beta.2"
