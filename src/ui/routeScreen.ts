@@ -4,4 +4,4 @@ import { makeUiOverlay } from '../utils/ui';
 export const makeRouteScreen = () =>
   makeUiOverlay()
     .addClass('route-screen')
-    .append($('<p>', { text: 'hi' }));
+    .append($('<h2>', { text: 'Forklift Route' }));

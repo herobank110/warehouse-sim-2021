@@ -1,3 +1,9 @@
+@mixin h-strip
+  background: white
+  margin: 0
+  padding: 1em 2em
+  box-shadow: 0 -3px 8px 0px darken(white, 50%)
+
 body
   margin: 0
   background: lighten(black, 10%)
@@ -19,7 +25,11 @@ body
   top: 0
   left: 0
 
+h2
+  font-size: 24px
+  font-family: Arial
+  font-weight: lighter
+
 .route-screen
-  background: white
-  & p
-    padding: 20px
+  & h2
+    @include h-strip
