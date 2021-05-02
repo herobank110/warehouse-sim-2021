@@ -1,3 +1,6 @@
+$bg: white
+$fg: #afafaf
+
 @mixin h-strip($dir: -3px)
   background: white
   margin: 0
@@ -14,11 +17,10 @@ body
     overflow: hidden
 
 #excalibur-play-root > #excalibur-play
-  $bg: #afafaf
-  background: $bg
+  background: $fg
   border-radius: 99px
   &:is(:hover, :active, :focus)
-    background: darken($bg, 8%)
+    background: darken($fg, 8%)
 
 .ui-overlay
   position: absolute
@@ -34,6 +36,24 @@ label
   font-family: Arial
   font-size: 12px
 
+p
+  font-family: Arial
+  font-size: 16px
+
+@mixin my-button
+  font-family: Arial
+  font-size: 14px
+  padding: 0.5em 1em
+  background: white
+  text-transform: uppercase
+  border: solid 1px darken(white, 20%)
+  border-radius: 4px
+
+@mixin my-button--primary
+  background: $fg
+  color: white
+  border: none
+
 .route-screen
   display: flex
   flex-direction: column
@@ -44,9 +64,18 @@ label
     @include h-strip(3px)
     &>form
       display: flex
-      justify-content: space-around
+      justify-content: space-between
       &>div
         display: flex
         width: 45%
         flex-direction: column
+        &>p
+          margin: 0.1em
+    &>button
+      @include my-button
+      @include my-button--primary
+      width: 100%
+      margin-top: 1em
+      
+      
       

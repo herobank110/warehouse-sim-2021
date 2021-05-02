@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import { iota } from '../utils';
 import { makeUiOverlay } from '../utils/ui';
 
 export const makeRouteScreen = (data: { srBays: number; shelves: number }) =>
@@ -11,24 +10,15 @@ export const makeRouteScreen = (data: { srBays: number; shelves: number }) =>
         $('<form>').append(
           $('<div>').append(
             $('<label>', { text: 'Shipping & Receiving Bay' }),
-            $('<select>').append(
-              ...iota(data.srBays).map(i =>
-                $('<option>', { text: `Bay ${i + 1}`, value: i }),
-              ),
-            ),
+            $('<p>', { id: 'route-srbay', text: 'Not selected' }),
           ),
           $('<div>').append(
             $('<label>', { text: 'Shelving Unit' }),
-            $('<select>').append(
-              ...iota(data.shelves).map(i =>
-                $('<option>', { text: `Shelf ${i + 1}`, value: i }),
-              ),
-            ),
+            $('<p>', { id: 'route-shelf', text: 'Not selected' }),
           ),
         ),
         $('<button>', { text: 'Accept' }).on('click', () => {
-            console.log('hi');
-            
+          console.log('hi');
         }),
       ),
     );

@@ -28,6 +28,10 @@ function endDrag(to: Actor) {
   dragFrom = undefined;
 }
 
+function onNodeClicked(node: RouteNode) {
+  console.log('clicked', node);
+}
+
 function loopTrucks() {
   const scene = warehouseGlobals.game.currentScene;
 
@@ -72,8 +76,7 @@ export default (game: Engine) => {
   );
 
   [...srBays, ...shelves].map(s => {
-    s.on('pointerdown', e => startDrag(e.target));
-    s.on('pointerup', e => endDrag(e.target));
+    s.on('pointerdown', e => onNodeClicked(<RouteNode>e.target));
   });
 
   [...srBays, ...shelves].map(i => scene.add(i));
