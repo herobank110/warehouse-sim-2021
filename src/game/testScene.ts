@@ -95,7 +95,8 @@ export default (game: Engine) => {
   });
 
   warehouseGlobals.onScoreChanged = () => {
-    console.log('score is now', warehouseGlobals.score);
+    const score = warehouseGlobals.score;
+    $(`#${R.id.hudItemsNow}`).text(score);
   };
   scene.camera.pos.setTo(100, 100);
   scene.camera.zoom(2);
