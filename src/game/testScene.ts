@@ -58,6 +58,7 @@ function loopTrucks() {
       ),
     );
   }
+  // TODO: use game time based thing instead of setTimeout
   setTimeout(loopTrucks, lerp1(15_000, 20_000, Math.random()));
 }
 
