@@ -79,16 +79,23 @@ async function levelUp() {
   const upgrade = await makeUpgradeScreen();
   switch (upgrade) {
     case EUpgrade.srBay:
-      console.log('srbay');
+      unlockFirstNode(warehouseGlobals.world.srBays);
       break;
     case EUpgrade.shelf:
-      console.log('shelf');
+      unlockFirstNode(warehouseGlobals.world.shelves);
       break;
     case EUpgrade.forklift:
       newForklift();
       break;
   }
   setIsPaused(false);
+}
+
+function unlockFirstNode(arr: RouteNode[]) {
+  const it = arr.find(i => !i.unlocked);
+  if (it) {
+    it.unlocked = true;
+  }
 }
 
 export default (game: Engine) => {
