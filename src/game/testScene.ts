@@ -105,6 +105,9 @@ export default (game: Engine) => {
     $(`#${R.id.hudItemsNext}`).text(Math.floor(score / 10) * 10 + 10);
   };
 
+  R.sound.music.loop = true;
+  R.sound.music.play();
+
   setTimeout(newForklift, 10);
   setTimeout(() => loopTrucks(), 1000);
 
