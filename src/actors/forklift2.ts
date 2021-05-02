@@ -55,7 +55,7 @@ export class Forklift extends Actor {
     this.route = { ...route, direction: RouteDirection.shelfToSrBay };
 
     // immediate position at srBay
-    this.pos = route.srBay.pos.clone();
+    this.pos = route.srBay.pos.add(vec(14, 14));
 
     this.onReachedNode(route.srBay);
     this.mainLoop();
