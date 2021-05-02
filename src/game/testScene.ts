@@ -1,26 +1,21 @@
-import { Scene, Engine, Actor, Color, vec } from 'excalibur';
+import { Scene, Engine, Color, vec } from 'excalibur';
 import { Forklift } from '../actors/forklift2';
 import { GettableItem, Item, Square, Triangle } from '../actors/item';
-import { BasicRouteNode, ESide, RouteNode, Shelf, SrBay } from '../actors/routeNode';
+import { ESide, RouteNode, Shelf, SrBay } from '../actors/routeNode';
 import { DropOff, PickUp, Truck } from '../actors/truck';
 import { warehouseGlobals } from '../globals';
 import { iota, lerp1 } from '../utils';
 import { makeRouteScreen } from '../ui/routeScreen';
 import $ from 'jquery';
 
-// game state
-let dragFrom: RouteNode | undefined;
-const shelves: Shelf[] = [];
-const srBays: SrBay[] = [];
-
 function onNodeClicked(node: RouteNode) {
   if (warehouseGlobals.ui.route) {
     if (node instanceof SrBay) {
-      const i = srBays.indexOf(node);
+      const i = warehouseGlobals.world.srBays.indexOf(node);
       warehouseGlobals.ui.route.srBay = i;
       $('#route-srbay').text(`Bay ${i + 1}`);
     } else if (node instanceof Shelf) {
-      const i = shelves.indexOf(node);
+      const i = warehouseGlobals.world.shelves.indexOf(node);
       warehouseGlobals.ui.route.shelf = i;
       $('#route-shelf').text(`Shelf ${i + 1}`);
     }
@@ -30,7 +25,7 @@ function onNodeClicked(node: RouteNode) {
 function loopTrucks() {
   const scene = warehouseGlobals.game.currentScene;
 
-  const bay = srBays[0]!;
+  const bay = warehouseGlobals.world.srBays[0]!;
   if (bay.dockedTruck) {
     return;
   }
@@ -59,11 +54,9 @@ function randomItemClass(): new () => Item {
 }
 
 export default (game: Engine) => {
-  // game.input.pointers.primary.on('move', e => {});
-  // game.input.pointers.primary.on('down', e => {});
-
   const scene = new Scene(game);
 
+  const { srBays, shelves } = warehouseGlobals.world;
   srBays.push(new SrBay({ tile: vec(0, 0), side: ESide.left }));
   shelves.push(
     new Shelf({ tile: vec(1, 0), side: ESide.top }),
@@ -71,12 +64,10 @@ export default (game: Engine) => {
   );
 
   [...srBays, ...shelves].map(s => {
-    s.on('pointerdown', e => onNodeClicked(<RouteNode>e.target));
+    s.on('pointerdown', e => onNodeClicked(e.target as RouteNode));
   });
 
   [...srBays, ...shelves].map(i => scene.add(i));
-  warehouseGlobals.world.srBays = srBays;
-  warehouseGlobals.world.shelves = shelves;
 
   (async () => {
     const { srBay, shelf } = await makeRouteScreen();
