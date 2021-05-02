@@ -49,6 +49,7 @@ function loopTrucks() {
   if (bay && !isPaused()) {
     warehouseGlobals.game.add(
       // TODO: increase items max to 3 if score high
+      // TODO: only spawn pickup for items that exist (why else would you schedule a pickup?!)
       new Truck(
         Math.random() < 0.6
           ? new DropOff({
@@ -66,7 +67,6 @@ function loopTrucks() {
       ),
     );
   }
-  // TODO: use game time based thing instead of setTimeout
   setTimeout(loopTrucks, lerp1(15_000, 20_000, Math.random()));
 }
 
