@@ -142,6 +142,7 @@ export class Truck extends Actor {
     ctx.pickUp.items[i]!.isGot = true;
 
     if (this.gotAllItems(ctx)) {
+      // TODO: do score update just before kill?!?!
       // track score in packages shipped
       warehouseGlobals.score += ctx.pickUp.items.length;
       warehouseGlobals.onScoreChanged();
