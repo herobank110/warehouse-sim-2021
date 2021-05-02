@@ -9,6 +9,8 @@ import squareUrl from 'url:../../res/square.png';
 import triangleUrl from 'url:../../res/triangle.png';
 // @ts-ignore
 import tickUrl from 'url:../../res/tick.png';
+// @ts-ignore
+import suitcaseUrl from 'url:../../res/suitcase.png';
 
 export const R = {
   texture: {
@@ -17,6 +19,7 @@ export const R = {
     square: new Texture(squareUrl),
     triangle: new Texture(triangleUrl),
     tick: new Texture(tickUrl),
+    suitcase: new Texture(suitcaseUrl),
   } as const,
   color: {
     bg: Color.White,
