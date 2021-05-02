@@ -48,6 +48,16 @@ p
   text-transform: uppercase
   border: solid 1px darken(white, 20%)
   border-radius: 4px
+  $pad: 2px
+  $pad-x: 1.2
+  $pad-t: 0.05s
+  box-shadow: $pad * $pad-x $pad 0 ($pad / 2) lighten(black, 30%)
+  transition: transform $pad-t, box-shadow $pad-t, background 0.03s
+  &:hover
+    background: linear-gradient(darken(white, 5%), white 90%, darken(white, 10%))
+  &:active
+    transform: translate($pad * $pad-x, $pad)
+    box-shadow: none
 
 @mixin my-button--primary
   background: $fg
@@ -73,9 +83,6 @@ p
           margin: 0.1em
     &>button
       @include my-button
-      @include my-button--primary
+      // @include my-button--primary
       width: 100%
       margin-top: 1em
-      
-      
-      

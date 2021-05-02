@@ -29,7 +29,13 @@ function endDrag(to: Actor) {
 }
 
 function onNodeClicked(node: RouteNode) {
-  console.log('clicked', node);
+  if (node instanceof SrBay) {
+    const i = srBays.indexOf(node);
+    $('#route-srbay').text(`Bay ${i + 1}`);
+  } else if (node instanceof Shelf) {
+    const i = shelves.indexOf(node);
+    $('#route-shelf').text(`Shelf ${i + 1}`);
+  }
 }
 
 function loopTrucks() {
