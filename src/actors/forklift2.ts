@@ -41,15 +41,20 @@ export class Forklift extends Actor {
     this.route = this.initRoute(ctor.route);
   }
 
-  onPostDraw(ctx: CanvasRenderingContext2D, delta: number) {
+  onPostDraw(_ctx: CanvasRenderingContext2D, delta: number) {
     const [begin, ...p2] = this.route.path
       .map(v => v.sub(this.pos)) // ctx is relative to the actor position!
       .map(v => warehouseGlobals.game.worldToScreenCoordinates(v))
-      .map(v => v.scale(0.5))
-      // .map(v => vec(Math.floor(v.x), Math.floor(v.y)));
+      .map(v => v.scale(0.5));
+    // .map(v => vec(Math.floor(v.x), Math.floor(v.y)));
     if (!begin || p2.length == 0) throw new Error('path must be at least 2');
 
+    const ctx = document.querySelector('canvas')?.getContext('2d')!;
+
     ctx.strokeStyle = this.color.toHex();
+    // using dashed thin line almost masks the vibration of excalibur
+    ctx.lineWidth = 0.3;
+    ctx.setLineDash([1, 5])
     ctx.beginPath();
     ctx.moveTo(begin.x, begin.y);
     p2.map(v => ctx.lineTo(v.x, v.y));
