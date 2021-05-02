@@ -8,6 +8,7 @@ import { iota, lerp1, R } from '../utils';
 import { makeRouteScreen } from '../ui/routeScreen';
 import $ from 'jquery';
 import { makeHudStrip } from '../ui/hudStrip';
+import { makeUpgradeScreen } from '../ui/upgradeScreen';
 
 async function newForklift() {
   warehouseGlobals.game.timescale = 0.001;
@@ -109,7 +110,8 @@ export default (game: Engine) => {
   R.sound.music.loop = true;
   R.sound.music.play();
 
-  setTimeout(newForklift, 10);
+  makeUpgradeScreen();
+  // setTimeout(newForklift, 10);
   setTimeout(() => loopTrucks(), 1000);
 
   return scene;
