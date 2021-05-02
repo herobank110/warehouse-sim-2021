@@ -2,7 +2,7 @@ import $ from 'jquery';
 import { warehouseGlobals } from '../globals';
 import { R, makeUiOverlay } from '../utils';
 
-enum EUpgrade {
+export enum EUpgrade {
   srBay,
   shelf,
   forklift,
