@@ -1,11 +1,5 @@
 import $ from 'jquery';
-import { R } from '../utils';
-
-const makeUiOverlay = () =>
-  $('<div>', {
-    class: 'ui-overlay',
-    css: { width: R.viewportSize.width, height: R.viewportSize.height },
-  });
+import { makeUiOverlay } from '../utils/ui';
 
 export const makeRouteScreen = () =>
   makeUiOverlay()
