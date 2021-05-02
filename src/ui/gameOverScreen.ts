@@ -17,7 +17,7 @@ const makeGameOverScreenUi = (data: { score: number; onDone: () => void }) =>
     .append(
       $('<h2>', { text: 'Game Over' }),
       $('<div>').append(
-        $('<span>', { text: 'Score:' }),
+        // $('<span>', { text: 'Score:' }),
         $('<span>', { text: data.score }),
         $('<div>', { css: { backgroundImage: `url('${R.texture.suitcase.path}')` } }),
         $('<span>', { text: 'items delivered' }),
