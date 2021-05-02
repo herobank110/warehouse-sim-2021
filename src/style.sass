@@ -32,6 +32,11 @@ h2
   font-family: Arial
   font-weight: lighter
 
+h3
+  font-family: Arial
+  font-size: 16px
+  font-weight: normal
+
 label
   font-family: Arial
   font-size: 12px
@@ -77,6 +82,8 @@ p
   justify-content: space-between
   & h2
     @include h-strip
+    // uses the shadow underneath it from hud strip
+    box-shadow: none
   &>div
     @include h-strip(3px)
     &>form
@@ -93,3 +100,24 @@ p
       // @include my-button--primary
       width: 100%
       margin-top: 1em
+
+.hud-strip
+  // display: flex
+  // height: 76px!important
+  // width: 100%!important
+  // justify-content: space-between
+  &>h3
+    @include h-strip
+    padding: 28px 2em
+    &>div
+      margin-left: 3em
+      display: inline-block
+      &>div
+        margin-right: 0.5em
+        display: inline-block
+        background: center / cover
+        image-rendering: pixelated
+        width:  16px
+        height: 16px
+
+
