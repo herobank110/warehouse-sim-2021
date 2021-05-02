@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import { R } from '.';
 
 export const makeUiOverlay = () =>
