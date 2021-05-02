@@ -169,8 +169,8 @@ function checkGameOver(delta: number) {
   });
 }
 
-function gameEnd() {
-  makeGameOverScreen();
+async function gameEnd() {
+  await makeGameOverScreen();
   window.location.reload();
 }
 
@@ -193,8 +193,9 @@ export default (game: Engine) => {
 
   // TODO: show main menu screen
 
-  setTimeout(newForklift, 10);
+  // setTimeout(newForklift, 10);
   setTimeout(loopTrucks, 1000);
+  gameEnd()
 
   R.sound.music.loop = true;
   R.sound.music.play();
