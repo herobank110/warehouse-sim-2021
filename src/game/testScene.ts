@@ -85,7 +85,7 @@ async function levelUp() {
       console.log('shelf');
       break;
     case EUpgrade.forklift:
-      console.log('forklift');
+      newForklift();
       break;
   }
   setIsPaused(false);
