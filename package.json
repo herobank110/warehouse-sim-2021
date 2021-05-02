@@ -24,7 +24,6 @@
       }
     },
     "release": {
-      "sourceMap": false,
       "publicUrl": "./",
       "outputFormat": "global"
     }
