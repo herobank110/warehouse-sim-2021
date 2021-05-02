@@ -1,10 +1,10 @@
-import { Scene, Engine, Color, vec, Actor } from 'excalibur';
+import { Scene, Engine, Color, vec, Actor, Sprite } from 'excalibur';
 import { Forklift } from '../actors/forklift2';
 import { GettableItem, Item, Square, Triangle } from '../actors/item';
 import { ESide, RouteNode, Shelf, SrBay } from '../actors/routeNode';
 import { DropOff, PickUp, Truck } from '../actors/truck';
 import { warehouseGlobals } from '../globals';
-import { iota, lerp1, R, tilePos } from '../utils';
+import { iota, lerp1, R, tilePos, zero } from '../utils';
 import { makeRouteScreen } from '../ui/routeScreen';
 import $ from 'jquery';
 import { makeHudStrip } from '../ui/hudStrip';
@@ -108,11 +108,12 @@ function checkGameOver(delta: number) {
     const oldBad = baddies.find(s2 => s2.node == node);
     if (!oldBad) {
       const blinker = new Actor({
-        pos: tilePos(node.tile, 'ctl'),
-        currentDrawing: undefined
-      })
-      blinker.actions.blink(250, 250);
-      baddies.push({ node, time: 0, blinker })
+        pos: tilePos(node.tile, 'top'),
+        currentDrawing: new Sprite(R.texture.warning, 0, 0, 8, 8),
+      });
+      blinker.actions.blink(250, 250, 999);
+      warehouseGlobals.game.add(blinker);
+      baddies.push({ node, time: 0, blinker });
     } else {
       oldBad.time += delta;
       if (oldBad.time > badTimeGameEnd) {
@@ -120,6 +121,7 @@ function checkGameOver(delta: number) {
       }
     }
   });
+  // TODO: remove baddies if no longer bad
 }
 
 function gameEnd() {}

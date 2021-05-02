@@ -12,6 +12,8 @@ import tickUrl from 'url:../../res/tick.png';
 // @ts-ignore
 import suitcaseUrl from 'url:../../res/suitcase.png';
 // @ts-ignore
+import warningUrl from 'url:../../res/warning.png';
+// @ts-ignore
 import musicUrl from 'url:../../res/music.mp3';
 
 export const R = {
@@ -22,6 +24,7 @@ export const R = {
     triangle: new Texture(triangleUrl),
     tick: new Texture(tickUrl),
     suitcase: new Texture(suitcaseUrl),
+    warning: new Texture(warningUrl),
   } as const,
   sound: {
     music: new Sound(musicUrl),
