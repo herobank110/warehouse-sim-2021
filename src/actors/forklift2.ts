@@ -1,4 +1,4 @@
-import { ActionContext, Actor, Color, vec, Vector } from 'excalibur';
+import { ActionContext, Actor, Color, Engine, vec, Vector } from 'excalibur';
 import { warehouseGlobals } from '../globals';
 import { Item } from './item';
 import { RouteNode, Shelf, SrBay } from './routeNode';
@@ -41,6 +41,17 @@ export class Forklift extends Actor {
     this.route = this.initRoute(ctor.route);
   }
 
+  onPostDraw(ctx: CanvasRenderingContext2D, delta: number) {
+    ctx.strokeStyle = this.color.toHex();
+    ctx.beginPath();
+    const p = warehouseGlobals.game.worldToScreenCoordinates(this.pos);
+    // this is relative to the actor position!
+    ctx.moveTo(10, 10)
+    ctx.lineTo(20, 20);
+    ctx.stroke();
+    super.onPostDraw(ctx, delta);
+  }
+
   private initRoute(route: Route) {
     // initially direction is actually srBayToShelf but its like using -1 turn
     // index, it will then be reversed!
@@ -66,11 +77,7 @@ export class Forklift extends Actor {
     if (this.route.direction == RouteDirection.shelfToSrBay) {
       path.reverse();
     }
-    // this.pos = this.route.path[0];
     path.map(p => actions.moveTo(p.x, p.y, 10));
-
-    // const actions = new ActionContext(this)
-    // this.actionQueue.add(actions.moveTo())
   }
 
   private onReachedNode(node: RouteNode) {
