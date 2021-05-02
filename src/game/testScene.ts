@@ -151,8 +151,6 @@ function checkGameOver(delta: number) {
       baddies.push({ node, time: 0, blinker });
     } else {
       oldBad.time += delta;
-      console.log(oldBad.time);
-
       if (oldBad.time > badTimeGameEnd) {
         gameEnd();
       }
