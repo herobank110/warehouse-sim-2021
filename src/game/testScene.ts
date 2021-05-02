@@ -22,7 +22,7 @@ async function newForklift() {
 }
 
 function onNodeClicked(node: RouteNode) {
-  if (warehouseGlobals.ui.route) {
+  if (node.unlocked && warehouseGlobals.ui.route) {
     if (node instanceof SrBay) {
       const i = warehouseGlobals.world.srBays.indexOf(node);
       warehouseGlobals.ui.route.srBay = i;
