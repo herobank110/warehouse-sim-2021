@@ -40,6 +40,9 @@ p
   font-family: Arial
   font-size: 16px
 
+@mixin grad-bg($lightest)
+  background: linear-gradient(darken($lightest, 5%), $lightest 90%, darken($lightest, 10%))
+
 @mixin my-button
   font-family: Arial
   font-size: 14px
@@ -54,7 +57,7 @@ p
   box-shadow: $pad * $pad-x $pad 0 ($pad / 2) lighten(black, 30%)
   transition: transform $pad-t, box-shadow $pad-t, background 0.03s
   &:hover
-    background: linear-gradient(darken(white, 5%), white 90%, darken(white, 10%))
+    @include grad-bg(white)
   &:active
     transform: translate($pad * $pad-x, $pad)
     box-shadow: none
@@ -63,6 +66,8 @@ p
   background: $fg
   color: white
   border: none
+  &:hover
+    @include grad-bg($fg)
 
 .route-screen
   display: flex

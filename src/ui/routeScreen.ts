@@ -5,7 +5,7 @@ export const makeRouteScreen = (data: { srBays: number; shelves: number }) =>
   makeUiOverlay()
     .addClass('route-screen')
     .append(
-      $('<h2>', { text: 'Forklift Route' }),
+      $('<h2>', { text: 'Forklift Routing Screen' }),
       $('<div>').append(
         $('<form>').append(
           $('<div>').append(
