@@ -9,6 +9,7 @@ import { makeRouteScreen } from '../ui/routeScreen';
 import $ from 'jquery';
 import { makeHudStrip } from '../ui/hudStrip';
 import { EUpgrade, makeUpgradeScreen } from '../ui/upgradeScreen';
+import { makeGameOverScreen } from '../ui/gameOverScreen';
 
 const badTimeGameEnd = 10_000;
 
@@ -190,8 +191,9 @@ export default (game: Engine) => {
 
   // TODO: show main menu screen
 
-  setTimeout(newForklift, 10);
+  // setTimeout(newForklift, 10);
   setTimeout(loopTrucks, 1000);
+  makeGameOverScreen();
 
   R.sound.music.loop = true;
   R.sound.music.play();
