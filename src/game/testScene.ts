@@ -149,5 +149,10 @@ export default (game: Engine) => {
   setTimeout(newForklift, 10);
   setTimeout(() => loopTrucks(), 1000);
 
+  game.on('postupdate', e => {
+    // TODO: check for game over condition
+    // console.log(e.delta);
+  });
+
   return scene;
 };
