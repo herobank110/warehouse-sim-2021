@@ -94,14 +94,15 @@ export default (game: Engine) => {
     s.on('pointerdown', e => onNodeClicked(e.target as RouteNode));
   });
 
+  makeHudStrip();
+
+  scene.camera.pos.setTo(100, 100);
+  scene.camera.zoom(2);
+
   warehouseGlobals.onScoreChanged = () => {
     const score = warehouseGlobals.score;
     $(`#${R.id.hudItemsNow}`).text(score);
   };
-  scene.camera.pos.setTo(100, 100);
-  scene.camera.zoom(2);
-
-  makeHudStrip();
 
   setTimeout(newForklift, 10);
   setTimeout(() => loopTrucks(), 1000);
