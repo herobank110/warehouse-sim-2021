@@ -13,21 +13,6 @@ let dragFrom: RouteNode | undefined;
 const shelves: Shelf[] = [];
 const srBays: SrBay[] = [];
 
-// TODO: replace excalibur dragging with simple html dropdown of srbay and shelf number
-function startDrag(from: Actor) {
-  if (from instanceof BasicRouteNode) {
-    dragFrom = from;
-  }
-}
-
-function endDrag(to: Actor) {
-  // if (dragFrom && to instanceof Shelf && shelves.includes(to)) {
-  if (dragFrom && to instanceof BasicRouteNode) {
-    // tryDispatchForklift([dragFrom, to]);
-  }
-  dragFrom = undefined;
-}
-
 function onNodeClicked(node: RouteNode) {
   if (warehouseGlobals.ui.route) {
     if (node instanceof SrBay) {
