@@ -8,10 +8,18 @@ import { iota, lerp1, R } from '../utils';
 import { makeRouteScreen } from '../ui/routeScreen';
 import $ from 'jquery';
 import { makeHudStrip } from '../ui/hudStrip';
-import { makeUpgradeScreen } from '../ui/upgradeScreen';
+import { EUpgrade, makeUpgradeScreen } from '../ui/upgradeScreen';
+
+function setIsPaused(newPaused: boolean) {
+  warehouseGlobals.game.timescale = newPaused ? 0.001 : 1;
+}
+
+function isPaused() {
+  return warehouseGlobals.game.timescale == 0.001;
+}
 
 async function newForklift() {
-  warehouseGlobals.game.timescale = 0.001;
+  setIsPaused(true);
   const { srBay, shelf } = await makeRouteScreen();
   const f = new Forklift({
     route: { srBay, shelf, path: Forklift.makePath(srBay, shelf) },
@@ -19,7 +27,7 @@ async function newForklift() {
   });
   warehouseGlobals.world.forklifts.push(f);
   warehouseGlobals.game.add(f);
-  warehouseGlobals.game.timescale = 1;
+  setIsPaused(false);
 }
 
 function onNodeClicked(node: RouteNode) {
@@ -38,7 +46,7 @@ function onNodeClicked(node: RouteNode) {
 
 function loopTrucks() {
   const bay = warehouseGlobals.world.srBays.find(bay => bay.unlocked && !bay.dockedTruck);
-  if (bay) {
+  if (bay && !isPaused()) {
     warehouseGlobals.game.add(
       // TODO: increase items max to 3 if score high
       // TODO: only spawn pickup for items that exist (why else would you schedule a pickup?!)
@@ -65,6 +73,23 @@ function loopTrucks() {
 
 function randomItemClass(): new () => Item {
   return [Square, Triangle, Triangle][Math.floor(Math.random() * 2)]!;
+}
+
+async function levelUp() {
+  setIsPaused(true);
+  const upgrade = await makeUpgradeScreen();
+  switch (upgrade) {
+    case EUpgrade.srBay:
+      console.log('srbay');
+      break;
+    case EUpgrade.shelf:
+      console.log('shelf');
+      break;
+    case EUpgrade.forklift:
+      console.log('forklift');
+      break;
+  }
+  setIsPaused(false);
 }
 
 export default (game: Engine) => {
@@ -105,12 +130,18 @@ export default (game: Engine) => {
     const score = warehouseGlobals.score;
     $(`#${R.id.hudItemsNow}`).text(score);
     $(`#${R.id.hudItemsNext}`).text(Math.floor(score / 10) * 10 + 10);
+
+    if (score % 10 == 0) {
+      levelUp();
+    }
   };
+
+  warehouseGlobals.score = 10;
+  warehouseGlobals.onScoreChanged();
 
   R.sound.music.loop = true;
   R.sound.music.play();
 
-  makeUpgradeScreen();
   // setTimeout(newForklift, 10);
   setTimeout(() => loopTrucks(), 1000);
 
