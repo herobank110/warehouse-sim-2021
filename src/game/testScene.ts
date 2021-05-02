@@ -118,7 +118,7 @@ function checkGameOver(delta: number) {
     } else {
       oldBad.time += delta;
       console.log(oldBad.time);
-      
+
       if (oldBad.time > badTimeGameEnd) {
         gameEnd();
       }
@@ -186,11 +186,9 @@ export default (game: Engine) => {
 
   // TODO: show main menu screen
   setTimeout(newForklift, 10);
-  setTimeout(() => loopTrucks(), 1000);
+  setTimeout(loopTrucks, 1000);
 
-  game.on('postupdate', e => {
-    checkGameOver(e.delta);
-  });
+  game.on('postupdate', e => checkGameOver(e.delta));
 
   return scene;
 };
