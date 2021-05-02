@@ -81,7 +81,7 @@ p
   background: $fg
   color: white
   border: none
-  &:hover
+  &:not(:disabled):hover
     @include grad-bg($fg)
 
 .route-screen
@@ -165,7 +165,19 @@ p
     margin-top: 40px
   &>div
     &>div
-      margin-top: 50px
+      margin: 50px 4px -5px 5px
+      @include icon
+      width: 32px
+      height: 32px
+    &>span
+      font-family: Arial
+      font-size: 20px
+      font-weight: lighter
+      &:first-child
+        margin-right: 10px
   &>button
     margin-top: 120px
     @include my-button
+    @include my-button--primary
+    width: 250px
+    height: 40px
