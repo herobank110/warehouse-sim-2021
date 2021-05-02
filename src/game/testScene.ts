@@ -177,6 +177,7 @@ function checkGameOver(delta: number) {
 async function gameEnd() {
   gameOver = true;
   await makeGameOverScreen();
+  // if in an iframe, only the iframe is reloaded (perfect!)
   window.location.reload();
 }
 
@@ -199,9 +200,8 @@ export default (game: Engine) => {
 
   // TODO: show main menu screen
 
-  // setTimeout(newForklift, 10);
+  setTimeout(newForklift, 10);
   setTimeout(loopTrucks, 1000);
-  gameEnd();
 
   R.sound.music.loop = true;
   R.sound.music.play();
