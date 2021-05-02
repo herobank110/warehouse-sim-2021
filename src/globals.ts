@@ -1,8 +1,15 @@
 import { Engine } from 'excalibur';
+import { Forklift } from './actors/forklift2';
+import { Shelf, SrBay } from './actors/routeNode';
 
 export const warehouseGlobals = {
-  game: <Engine>{},
+  game: {} as Engine,
   ui: {
-    route: <{ html: JQuery; srBay: number; shelf: number } | undefined>undefined,
+    route: undefined as { html: JQuery; srBay: number; shelf: number } | undefined,
+  },
+  world: {
+    srBays: [] as SrBay[],
+    shelves: [] as Shelf[],
+    forklifts: [] as Forklift[],
   },
 };
