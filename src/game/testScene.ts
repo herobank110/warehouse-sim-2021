@@ -78,7 +78,7 @@ export default (game: Engine) => {
 
   [...srBays, ...shelves].map(i => scene.add(i));
 
-  $('body').append(makeRouteScreen());
+  $('body').append(makeRouteScreen({ srBays: 1, shelves: 2 }));
   // scene.add(
   //   new Forklift({
   //     route: {

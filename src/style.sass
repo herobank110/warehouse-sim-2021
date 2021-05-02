@@ -1,8 +1,8 @@
-@mixin h-strip
+@mixin h-strip($dir: -3px)
   background: white
   margin: 0
   padding: 1em 2em
-  box-shadow: 0 -3px 8px 0px darken(white, 50%)
+  box-shadow: 0 $dir 8px 0px darken(white, 50%)
 
 body
   margin: 0
@@ -30,6 +30,23 @@ h2
   font-family: Arial
   font-weight: lighter
 
+label
+  font-family: Arial
+  font-size: 12px
+
 .route-screen
+  display: flex
+  flex-direction: column
+  justify-content: space-between
   & h2
     @include h-strip
+  &>div
+    @include h-strip(3px)
+    &>form
+      display: flex
+      justify-content: space-around
+      &>div
+        display: flex
+        width: 45%
+        flex-direction: column
+      
