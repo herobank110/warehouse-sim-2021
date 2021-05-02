@@ -10,8 +10,9 @@ import $ from 'jquery';
 import { makeHudStrip } from '../ui/hudStrip';
 import { EUpgrade, makeUpgradeScreen } from '../ui/upgradeScreen';
 import { makeGameOverScreen } from '../ui/gameOverScreen';
-import game from '.';
+// import game from '.';
 
+let gameOver = false;
 const badTimeGameEnd = 10_000;
 
 function makeScene(game: Engine) {
@@ -137,6 +138,10 @@ function unlockFirstNode(arr: RouteNode[]) {
 }
 
 function checkGameOver(delta: number) {
+  if (gameOver) {
+    return;
+  }
+
   const { srBays, shelves, baddies } = warehouseGlobals.world;
   const newBad = [...srBays, ...shelves].filter(s => s.items.length > 3);
 
@@ -170,6 +175,7 @@ function checkGameOver(delta: number) {
 }
 
 async function gameEnd() {
+  gameOver = true;
   await makeGameOverScreen();
   window.location.reload();
 }
@@ -195,7 +201,7 @@ export default (game: Engine) => {
 
   // setTimeout(newForklift, 10);
   setTimeout(loopTrucks, 1000);
-  gameEnd()
+  gameEnd();
 
   R.sound.music.loop = true;
   R.sound.music.play();
