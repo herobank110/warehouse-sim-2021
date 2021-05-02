@@ -26,4 +26,10 @@ export const R = {
     fg: Color.fromHex('afafaf'),
   } as const,
   viewportSize: { width: 400, height: 400 } as const,
+  id: {
+    routeShelf: 'route-shelf',
+    routeSrBay: 'route-srbay',
+    hudItemsNext: 'hud-items-next',
+    hudItemsNow: 'hud-items-now',
+  } as const,
 } as const;

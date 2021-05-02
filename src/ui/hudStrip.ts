@@ -13,9 +13,9 @@ const makeHudStripUi = () =>
       $('<h3>', { text: 'Warehouse Simulator 2021' }).append(
         $('<div>').append(
           $('<div>', { css: { backgroundImage: `url('${R.texture.suitcase.path}')` } }),
-          $('<span>', { id: 'hud-items-now', text: '0' }),
+          $('<span>', { id: R.id.hudItemsNow, text: '0' }),
           $('<span>', { text: '🡒' }),
-          $('<span>', { id: 'hud-items-next',text: '10' }),
+          $('<span>', { id: R.id.hudItemsNext,text: '10' }),
         ),
       ),
     );

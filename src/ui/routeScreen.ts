@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import { Shelf, SrBay } from '../actors/routeNode';
 import { warehouseGlobals } from '../globals';
-import { makeUiOverlay } from '../utils/ui';
+import { R, makeUiOverlay } from '../utils';
 
 export const makeRouteScreen = () =>
   new Promise<{ srBay: SrBay; shelf: Shelf }>(resolve => {
@@ -32,11 +32,11 @@ const makeRouteScreenUi = (data: { onAccept: () => void }) =>
         $('<form>').append(
           $('<div>').append(
             $('<label>', { text: 'Shipping & Receiving Bay' }),
-            $('<p>', { id: 'route-srbay', text: 'Not selected' }),
+            $('<p>', { id: R.id.routeSrBay, text: 'Not selected' }),
           ),
           $('<div>').append(
             $('<label>', { text: 'Shelving Unit' }),
-            $('<p>', { id: 'route-shelf', text: 'Not selected' }),
+            $('<p>', { id: R.id.routeShelf, text: 'Not selected' }),
           ),
         ),
         $('<button>', { text: 'Accept' }).on('click', data.onAccept),
