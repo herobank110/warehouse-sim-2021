@@ -12,6 +12,40 @@ import { EUpgrade, makeUpgradeScreen } from '../ui/upgradeScreen';
 
 const badTimeGameEnd = 10_000;
 
+function makeScene(game: Engine) {
+  const scene = new Scene(game);
+
+  const { srBays, shelves } = warehouseGlobals.world;
+  srBays.push(
+    new SrBay({ tile: vec(0, 0), side: ESide.left }),
+    new SrBay({ tile: vec(0, 1), side: ESide.left }),
+    new SrBay({ tile: vec(0, 2), side: ESide.left }),
+    new SrBay({ tile: vec(0, 3), side: ESide.left }),
+  );
+  shelves.push(
+    new Shelf({ tile: vec(1, 0), side: ESide.top }),
+    new Shelf({ tile: vec(1, 1), side: ESide.top }),
+    new Shelf({ tile: vec(1, 2), side: ESide.top }),
+    new Shelf({ tile: vec(1, 3), side: ESide.top }),
+    new Shelf({ tile: vec(2, 0), side: ESide.top }),
+    new Shelf({ tile: vec(2, 1), side: ESide.top }),
+    new Shelf({ tile: vec(2, 2), side: ESide.top }),
+    new Shelf({ tile: vec(2, 3), side: ESide.top }),
+  );
+
+  srBays.map((s, i) => (s.unlocked = i < 1));
+  shelves.map((s, i) => (s.unlocked = i < 2));
+
+  [...srBays, ...shelves].map(s => {
+    scene.add(s);
+    s.on('pointerdown', e => onNodeClicked(e.target as RouteNode));
+  });
+
+  scene.camera.pos.setTo(100, 100);
+  scene.camera.zoom(2);
+  return scene;
+}
+
 function setIsPaused(newPaused: boolean) {
   warehouseGlobals.game.timescale = newPaused ? 0.001 : 1;
 }
@@ -137,58 +171,30 @@ function checkGameOver(delta: number) {
 
 function gameEnd() {}
 
+function onScoreChanged() {
+  const score = warehouseGlobals.score;
+  $(`#${R.id.hudItemsNow}`).text(score);
+  $(`#${R.id.hudItemsNext}`).text(Math.floor(score / 10) * 10 + 10);
+
+  if (score % 10 == 0) {
+    levelUp();
+  }
+}
+
 export default (game: Engine) => {
-  const scene = new Scene(game);
-
-  const { srBays, shelves } = warehouseGlobals.world;
-  srBays.push(
-    new SrBay({ tile: vec(0, 0), side: ESide.left }),
-    new SrBay({ tile: vec(0, 1), side: ESide.left }),
-    new SrBay({ tile: vec(0, 2), side: ESide.left }),
-    new SrBay({ tile: vec(0, 3), side: ESide.left }),
-  );
-  shelves.push(
-    new Shelf({ tile: vec(1, 0), side: ESide.top }),
-    new Shelf({ tile: vec(1, 1), side: ESide.top }),
-    new Shelf({ tile: vec(1, 2), side: ESide.top }),
-    new Shelf({ tile: vec(1, 3), side: ESide.top }),
-    new Shelf({ tile: vec(2, 0), side: ESide.top }),
-    new Shelf({ tile: vec(2, 1), side: ESide.top }),
-    new Shelf({ tile: vec(2, 2), side: ESide.top }),
-    new Shelf({ tile: vec(2, 3), side: ESide.top }),
-  );
-
-  srBays.map((s, i) => (s.unlocked = i < 1));
-  shelves.map((s, i) => (s.unlocked = i < 2));
-
-  [...srBays, ...shelves].map(s => {
-    scene.add(s);
-    s.on('pointerdown', e => onNodeClicked(e.target as RouteNode));
-  });
-
+  const scene = makeScene(game);
   makeHudStrip();
 
-  scene.camera.pos.setTo(100, 100);
-  scene.camera.zoom(2);
-
-  warehouseGlobals.onScoreChanged = () => {
-    const score = warehouseGlobals.score;
-    $(`#${R.id.hudItemsNow}`).text(score);
-    $(`#${R.id.hudItemsNext}`).text(Math.floor(score / 10) * 10 + 10);
-
-    if (score % 10 == 0) {
-      levelUp();
-    }
-  };
-
-  R.sound.music.loop = true;
-  R.sound.music.play();
+  warehouseGlobals.onScoreChanged = onScoreChanged;
+  game.on('postupdate', e => checkGameOver(e.delta));
 
   // TODO: show main menu screen
+
   setTimeout(newForklift, 10);
   setTimeout(loopTrucks, 1000);
 
-  game.on('postupdate', e => checkGameOver(e.delta));
+  R.sound.music.loop = true;
+  R.sound.music.play();
 
   return scene;
 };
