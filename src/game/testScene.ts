@@ -8,6 +8,18 @@ import { iota, lerp1 } from '../utils';
 import { makeRouteScreen } from '../ui/routeScreen';
 import $ from 'jquery';
 
+async function newForklift() {
+  warehouseGlobals.game.stop();
+  const { srBay, shelf } = await makeRouteScreen();
+  const f = new Forklift({
+    route: { srBay, shelf, path: Forklift.makePath(srBay, shelf) },
+    color: Color.Red,
+  });
+  warehouseGlobals.world.forklifts.push(f);
+  warehouseGlobals.game.add(f);
+  warehouseGlobals.game.start();
+}
+
 function onNodeClicked(node: RouteNode) {
   if (warehouseGlobals.ui.route) {
     if (node instanceof SrBay) {
@@ -23,29 +35,26 @@ function onNodeClicked(node: RouteNode) {
 }
 
 function loopTrucks() {
-  const scene = warehouseGlobals.game.currentScene;
-
   const bay = warehouseGlobals.world.srBays[0]!;
-  if (bay.dockedTruck) {
-    return;
+  if (!bay.dockedTruck) {
+    warehouseGlobals.game.add(
+      new Truck(
+        Math.random() < 0.6
+          ? new DropOff({
+              items: iota(lerp1(1, 4, Math.random())).map(
+                () => new (randomItemClass())(),
+              ),
+              bay,
+            })
+          : new PickUp({
+              items: iota(lerp1(1, 4, Math.random())).map(
+                () => new GettableItem(randomItemClass()),
+              ),
+              bay,
+            }),
+      ),
+    );
   }
-
-  scene.add(
-    new Truck(
-      Math.random() < 0.6
-        ? new DropOff({
-            items: iota(lerp1(1, 4, Math.random())).map(i => new (randomItemClass())()),
-            bay,
-          })
-        : new PickUp({
-            items: iota(lerp1(1, 4, Math.random())).map(
-              i => new GettableItem(randomItemClass()),
-            ),
-            bay,
-          }),
-    ),
-  );
-
   setTimeout(loopTrucks, lerp1(10000, 15000, Math.random()));
 }
 
@@ -68,16 +77,7 @@ export default (game: Engine) => {
   });
 
   [...srBays, ...shelves].map(i => scene.add(i));
-
-  (async () => {
-    const { srBay, shelf } = await makeRouteScreen();
-    const f = new Forklift({
-      route: { srBay, shelf, path: Forklift.makePath(srBay, shelf) },
-      color: Color.Red,
-    });
-    warehouseGlobals.world.forklifts.push(f);
-    scene.add(f);
-  })();
+  // setTimeout(newForklift, 3000);
 
   setTimeout(() => loopTrucks(), 1000);
   scene.camera.pos.setTo(100, 100);
