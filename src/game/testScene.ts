@@ -10,6 +10,7 @@ import $ from 'jquery';
 import { makeHudStrip } from '../ui/hudStrip';
 import { EUpgrade, makeUpgradeScreen } from '../ui/upgradeScreen';
 import { makeGameOverScreen } from '../ui/gameOverScreen';
+import game from '.';
 
 const badTimeGameEnd = 10_000;
 
@@ -169,7 +170,8 @@ function checkGameOver(delta: number) {
 }
 
 function gameEnd() {
-  throw new Error('game end');
+  makeGameOverScreen();
+  window.location.reload();
 }
 
 function onScoreChanged() {
@@ -191,9 +193,8 @@ export default (game: Engine) => {
 
   // TODO: show main menu screen
 
-  // setTimeout(newForklift, 10);
+  setTimeout(newForklift, 10);
   setTimeout(loopTrucks, 1000);
-  makeGameOverScreen();
 
   R.sound.music.loop = true;
   R.sound.music.play();
