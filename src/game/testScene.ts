@@ -169,7 +169,9 @@ function checkGameOver(delta: number) {
   });
 }
 
-function gameEnd() {}
+function gameEnd() {
+  throw new Error('game end');
+}
 
 function onScoreChanged() {
   const score = warehouseGlobals.score;
