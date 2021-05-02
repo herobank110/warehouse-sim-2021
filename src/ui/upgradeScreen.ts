@@ -49,14 +49,14 @@ const makeUpgradeScreenUi = (data: { onPick: (type: EUpgrade) => void }) =>
         makeUpgradeCard({
           name: 'Shipping & Receiving Bay',
           img: '',
-          have: warehouseGlobals.world.srBays.length,
-          total: 5,
+          have: warehouseGlobals.world.srBays.filter(i => i.unlocked).length,
+          total: 4,
           onPick: () => data.onPick(EUpgrade.srBay),
         }),
         makeUpgradeCard({
           name: 'Shelf',
           img: '',
-          have: warehouseGlobals.world.shelves.length,
+          have: warehouseGlobals.world.shelves.filter(i => i.unlocked).length,
           total: 8,
           onPick: () => data.onPick(EUpgrade.shelf),
         }),
