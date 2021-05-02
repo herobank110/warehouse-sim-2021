@@ -31,14 +31,6 @@ export class BasicRouteNode extends Actor implements ITile {
     });
   }
 
-  get tile() {
-    return this.routeNode.tile;
-  }
-
-  get side() {
-    return this.routeNode.side;
-  }
-
   /** reposition items based on actor rotation */
   private organizeItems() {
     const offset = vec([8, 0][this.side % 2]!, [0, 8][this.side % 2]!);
@@ -69,6 +61,22 @@ export class BasicRouteNode extends Actor implements ITile {
     items.map(item => (item.visible = true));
     this.bayTruckCallback?.call(undefined);
     this.organizeItems();
+  }
+
+  get tile() {
+    return this.routeNode.tile;
+  }
+
+  get side() {
+    return this.routeNode.side;
+  }
+
+  get unlocked() {
+    return this.visible;
+  }
+
+  set unlocked(value) {
+    this.visible = value;
   }
 }
 
