@@ -222,6 +222,7 @@ export default (game: Engine) => {
 
   setTimeout(async () => {
     await newForklift();
+    await newForklift();
     setTimeout(loopTrucks, 1000);
   }, 10);
 
