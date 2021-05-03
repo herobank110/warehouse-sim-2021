@@ -18,6 +18,13 @@ const badTimeGameEnd = 10_000;
 function makeScene(game: Engine) {
   const scene = new Scene(game);
 
+  scene.add(
+    new Actor({
+      currentDrawing: new Sprite(R.texture.bg, 0, 0, 200, 200),
+      anchor: vec(0, 0),
+    }),
+  );
+
   const { srBays, shelves } = warehouseGlobals.world;
   srBays.push(
     new SrBay({ tile: vec(0, 0), side: ESide.left }),
