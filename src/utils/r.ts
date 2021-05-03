@@ -4,9 +4,9 @@ import truckUrl from 'url:../../res/truck.png';
 // @ts-ignore
 import srBayUrl from 'url:../../res/srBay.png';
 // @ts-ignore
-import squareUrl from 'url:../../res/square.png';
+import squareUrl from 'url:../../res/new/square_sm.png';
 // @ts-ignore
-import triangleUrl from 'url:../../res/triangle.png';
+import triangleUrl from 'url:../../res/new/triangle_sm.png';
 // @ts-ignore
 import tickUrl from 'url:../../res/tick.png';
 // @ts-ignore

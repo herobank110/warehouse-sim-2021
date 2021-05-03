@@ -114,6 +114,7 @@ function loopTrucks() {
     );
   }
   setTimeout(loopTrucks, lerp1(15_000, 20_000, Math.random()));
+  setTimeout(loopTrucks, 1000);
 }
 
 function randomItemClass(): new () => Item {

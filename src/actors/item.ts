@@ -1,9 +1,4 @@
-import { Actor, Constructor, Engine, Sprite, vec } from 'excalibur';
-import {
-  Darken,
-  Lighten,
-  Saturate,
-} from 'excalibur/dist/Drawing/SpriteEffects';
+import { Actor, Engine, Sprite, vec } from 'excalibur';
 import { R } from '../utils';
 
 export type Item = Square | Triangle;
