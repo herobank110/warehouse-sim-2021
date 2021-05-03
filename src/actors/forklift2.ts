@@ -1,5 +1,6 @@
-import { ActionContext, Actor, Color, vec, Vector } from 'excalibur';
+import { ActionContext, Actor, Color, Sprite, vec, Vector } from 'excalibur';
 import { warehouseGlobals } from '../globals';
+import { R } from '../utils';
 import { Item } from './item';
 import { RouteNode, Shelf, SrBay } from './routeNode';
 import { routePathMap } from './routePathMap';
@@ -26,6 +27,8 @@ type RouteRunner = Route & {
   direction: RouteDirection;
 };
 
+const forkliftSprite = new Sprite(R.texture.forklift, 0, 0, 8, 3);
+
 export class Forklift extends Actor {
   private item_?: Item;
   route: RouteRunner;
@@ -35,6 +38,7 @@ export class Forklift extends Actor {
       width: 8,
       height: 3,
       color: ctor.color, // will this tint textures? just need to store it to draw path lines
+      currentDrawing: forkliftSprite,
     });
 
     // assignment for typescript to realized its initialized
@@ -42,6 +46,11 @@ export class Forklift extends Actor {
   }
 
   onPostDraw(_ctx: CanvasRenderingContext2D, delta: number) {
+    const rot = this.vel.clone();
+    rot.scaleEqual(1 / rot.size);
+    this.currentDrawing.anchor = vec(0.5, rot.y == 1 ? 1.8 : rot.y == -1 ? -1.2 : 0.5);
+    this.currentDrawing.rotation = Math.atan2(rot.y, rot.x);
+
     const [begin, ...p2] = this.route.path
       .map(v => v.sub(this.pos)) // ctx is relative to the actor position!
       .map(v => warehouseGlobals.game.worldToScreenCoordinates(v))
