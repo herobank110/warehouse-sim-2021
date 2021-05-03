@@ -10,6 +10,7 @@ import $ from 'jquery';
 import { makeHudStrip } from '../ui/hudStrip';
 import { EUpgrade, makeUpgradeScreen } from '../ui/upgradeScreen';
 import { makeGameOverScreen } from '../ui/gameOverScreen';
+import { randomIntInRange } from 'excalibur/dist/Util';
 // import game from '.';
 
 let gameOver = false;
@@ -91,22 +92,29 @@ function onNodeClicked(node: RouteNode) {
 }
 
 function loopTrucks() {
-  const bay = warehouseGlobals.world.srBays.find(bay => bay.unlocked && !bay.dockedTruck);
+  const { shelves, srBays } = warehouseGlobals.world;
+  const bay = srBays.find(bay => bay.unlocked && !bay.dockedTruck);
   if (bay && !isPaused() && !gameOver) {
+    const canPickup: Item[] = [];
+    shelves.map(s => canPickup.push(...s.items));
+    // const randomPickupItemClass = () =>
+    const maxx = warehouseGlobals.score < 20 ? 2 : 3;
     warehouseGlobals.game.add(
-      // TODO: increase items max to 3 if score high
-      // TODO: only spawn pickup for items that exist (why else would you schedule a pickup?!)
       new Truck(
-        Math.random() < 0.6
-          ? new DropOff({
-              items: iota(lerp1(1, 2, Math.random())).map(
-                () => new (randomItemClass())(),
+        canPickup.length > 0 && Math.random() < 0.6
+          ? new PickUp({
+              items: iota(lerp1(1, Math.min(maxx, canPickup.length), Math.random())).map(
+                () =>
+                  new GettableItem(
+                    (canPickup.splice(randomIntInRange(0, canPickup.length - 1), 1)[0]
+                      ?.constructor as new () => Item),
+                  ),
               ),
               bay,
             })
-          : new PickUp({
-              items: iota(lerp1(1, 2, Math.random())).map(
-                () => new GettableItem(randomItemClass()),
+          : new DropOff({
+              items: iota(lerp1(1, maxx, Math.random())).map(
+                () => new (randomItemClass())(),
               ),
               bay,
             }),
