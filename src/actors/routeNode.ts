@@ -49,7 +49,6 @@ export class BasicRouteNode extends Actor implements ITile {
     index = index ?? this.items.length - 1;
     const item = this.items[index];
     if (item) {
-      this.pop();
       this.items.splice(index, 1);
       item.visible = false;
       this.organizeItems();
@@ -59,15 +58,10 @@ export class BasicRouteNode extends Actor implements ITile {
   }
 
   pushItem(...items: Actor[]) {
-    this.pop();
     this.items.push(...items);
     items.map(item => (item.visible = true));
     this.bayTruckCallback?.call(undefined);
     this.organizeItems();
-  }
-
-  private pop() {
-    [R.sound.pop, R.sound.pop2, R.sound.box][randomIntInRange(0, 2)]!.play(0.5);
   }
 
   get tile() {

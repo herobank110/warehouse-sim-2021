@@ -88,6 +88,7 @@ export class Truck extends Actor {
         if (!item) throw new Error('truck offload items out of bounds');
         ctx.dropOff.bay.pushItem(item);
         this.organizeItems(ctx.dropOff.items);
+        R.sound.box.play(0.5);
       }, i * delay),
     );
     // fails if items has zero or one item

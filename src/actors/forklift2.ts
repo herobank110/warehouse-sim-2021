@@ -1,4 +1,5 @@
 import { ActionContext, Actor, Color, Sprite, vec, Vector } from 'excalibur';
+import { randomIntInRange } from 'excalibur/dist/Util';
 import { warehouseGlobals } from '../globals';
 import { R } from '../utils';
 import { Item } from './item';
@@ -36,7 +37,7 @@ export class Forklift extends Actor {
       width: 8,
       height: 3,
       color: ctor.color, // will this tint textures? just need to store it to draw path lines
-      currentDrawing: new Sprite(R.texture.forklift, 0, 0, 8, 3)
+      currentDrawing: new Sprite(R.texture.forklift, 0, 0, 8, 3),
     });
 
     // assignment for typescript to realized its initialized
@@ -113,6 +114,7 @@ export class Forklift extends Actor {
         (node instanceof SrBay && node.dockedTruck?.canLoadItem(this.item)))
     ) {
       node.pushItem(this.item);
+      Forklift.popSfx();
       this.item = undefined;
     }
   }
@@ -127,6 +129,7 @@ export class Forklift extends Actor {
         this.item = node.popItem(
           node.items.findIndex(item => srBay.dockedTruck?.canLoadItem(item)),
         );
+        Forklift.popSfx();
       }
     }
   }
@@ -140,6 +143,10 @@ export class Forklift extends Actor {
       return `srbay${i}_shelf${j}` as RouteIndexicalSymbol;
     }
     return undefined;
+  }
+
+  private static popSfx() {
+    [R.sound.pop, R.sound.pop2][randomIntInRange(0, 1)]!.play(0.5);
   }
 
   static makePath(srBay: SrBay, shelf: Shelf) {
