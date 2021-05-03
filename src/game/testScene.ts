@@ -15,6 +15,7 @@ import { randomIntInRange } from 'excalibur/dist/Util';
 
 let gameOver = false;
 const badTimeGameEnd = 10_000;
+const scoreMod = 5;
 
 function makeScene(game: Engine) {
   const scene = new Scene(game);
@@ -110,7 +111,7 @@ function onNodeClicked(node: RouteNode) {
 function loopTrucks() {
   const { shelves, srBays } = warehouseGlobals.world;
   const bayCandidates = srBays.filter(bay => bay.unlocked && !bay.dockedTruck);
-  const bay = bayCandidates[randomIntInRange(0, bayCandidates.length - 1)]
+  const bay = bayCandidates[randomIntInRange(0, bayCandidates.length - 1)];
   if (bay && !isPaused() && !gameOver) {
     const canPickup: Item[] = [];
     shelves.map(s => canPickup.push(...s.items));
@@ -222,9 +223,8 @@ async function gameEnd() {
 function onScoreChanged() {
   const score = warehouseGlobals.score;
   $(`#${R.id.hudItemsNow}`).text(score);
-  $(`#${R.id.hudItemsNext}`).text(Math.floor(score / 10) * 10 + 10);
-
-  if (score % 10 == 0) {
+  $(`#${R.id.hudItemsNext}`).text(Math.floor(score / scoreMod) * scoreMod + scoreMod);
+  if (score % scoreMod == 0) {
     levelUp();
   }
 }
