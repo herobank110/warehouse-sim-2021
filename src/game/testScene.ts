@@ -109,7 +109,8 @@ function onNodeClicked(node: RouteNode) {
 
 function loopTrucks() {
   const { shelves, srBays } = warehouseGlobals.world;
-  const bay = srBays.find(bay => bay.unlocked && !bay.dockedTruck);
+  const bayCandidates = srBays.filter(bay => bay.unlocked && !bay.dockedTruck);
+  const bay = bayCandidates[randomIntInRange(0, bayCandidates.length - 1)]
   if (bay && !isPaused() && !gameOver) {
     const canPickup: Item[] = [];
     shelves.map(s => canPickup.push(...s.items));
