@@ -60,7 +60,7 @@ export class Forklift extends Actor {
     const ctx = document.querySelector('canvas')?.getContext('2d')!;
 
     const c = this.color.clone();
-    c.a = 0.5;
+    // c.a = 0.5;
     ctx.strokeStyle = c.toHex();
     // using dashed thin line almost masks the vibration of excalibur
     ctx.lineWidth = 0.3;

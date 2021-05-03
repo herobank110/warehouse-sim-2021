@@ -70,7 +70,23 @@ async function newForklift() {
   const { srBay, shelf } = await makeRouteScreen();
   const f = new Forklift({
     route: { srBay, shelf, path: Forklift.makePath(srBay, shelf) },
-    color: Color.Red,
+    color:
+      [
+        Color.Red,
+        Color.Green.darken(0.2),
+        Color.Orange,
+        Color.Violet,
+        Color.Yellow,
+        Color.Cyan,
+        Color.DarkGray,
+        Color.Magenta,
+        Color.Rose,
+        Color.Azure,
+        Color.Viridian,
+        Color.Chartreuse,
+        Color.Gray,
+        Color.Blue,
+      ][warehouseGlobals.world.forklifts.length] ?? Color.Black,
   });
   warehouseGlobals.world.forklifts.push(f);
   warehouseGlobals.game.add(f);
@@ -105,8 +121,8 @@ function loopTrucks() {
               items: iota(lerp1(1, Math.min(maxx, canPickup.length), Math.random())).map(
                 () =>
                   new GettableItem(
-                    (canPickup.splice(randomIntInRange(0, canPickup.length - 1), 1)[0]
-                      ?.constructor as new () => Item),
+                    canPickup.splice(randomIntInRange(0, canPickup.length - 1), 1)[0]
+                      ?.constructor as new () => Item,
                   ),
               ),
               bay,
