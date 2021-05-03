@@ -129,6 +129,9 @@ export class Forklift extends Actor {
         this.item = node.popItem(
           node.items.findIndex(item => srBay.dockedTruck?.canLoadItem(item)),
         );
+      }
+      if (this.item) {
+        // was an item picked up?
         Forklift.popSfx();
       }
     }
