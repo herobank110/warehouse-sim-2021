@@ -155,7 +155,7 @@ export class Forklift extends Actor {
   static makePath(srBay: SrBay, shelf: Shelf) {
     const sym = this.routeSym(srBay, shelf);
     if (!sym) throw new Error('invalid path nodes');
-    return routePathMap[sym];
+    return [...routePathMap[sym]];
   }
 
   get item() {
