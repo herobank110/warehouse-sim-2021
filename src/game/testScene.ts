@@ -92,7 +92,7 @@ function onNodeClicked(node: RouteNode) {
 
 function loopTrucks() {
   const bay = warehouseGlobals.world.srBays.find(bay => bay.unlocked && !bay.dockedTruck);
-  if (bay && !isPaused()) {
+  if (bay && !isPaused() && !gameOver) {
     warehouseGlobals.game.add(
       // TODO: increase items max to 3 if score high
       // TODO: only spawn pickup for items that exist (why else would you schedule a pickup?!)
@@ -122,6 +122,10 @@ function randomItemClass(): new () => Item {
 }
 
 async function levelUp() {
+  if (gameOver) {
+    return;
+  }
+
   setIsPaused(true);
   const upgrade = await makeUpgradeScreen();
   switch (upgrade) {
@@ -184,6 +188,7 @@ function checkGameOver(delta: number) {
 
 async function gameEnd() {
   gameOver = true;
+  setIsPaused(true);
   await makeGameOverScreen();
   // if in an iframe, only the iframe is reloaded (perfect!)
   window.location.reload();
@@ -208,8 +213,10 @@ export default (game: Engine) => {
 
   // TODO: show main menu screen
 
-  setTimeout(newForklift, 10);
-  setTimeout(loopTrucks, 1000);
+  setTimeout(async () => {
+    await newForklift();
+    setTimeout(loopTrucks, 1000);
+  }, 10);
 
   R.sound.music.loop = true;
   R.sound.music.play();
