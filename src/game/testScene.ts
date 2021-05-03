@@ -97,7 +97,6 @@ function loopTrucks() {
   if (bay && !isPaused() && !gameOver) {
     const canPickup: Item[] = [];
     shelves.map(s => canPickup.push(...s.items));
-    // const randomPickupItemClass = () =>
     const maxx = warehouseGlobals.score < 20 ? 2 : 3;
     warehouseGlobals.game.add(
       new Truck(
