@@ -19,6 +19,16 @@ import forkliftUrl from 'url:../../res/forklift.png';
 import bgUrl from 'url:../../res/bg.png';
 // @ts-ignore
 import musicUrl from 'url:../../res/music.mp3';
+// @ts-ignore
+import musicMenuUrl from 'url:../../res/music_menu.mp3';
+// @ts-ignore
+import boxUrl from 'url:../../res/box.mp3';
+// @ts-ignore
+import popUrl from 'url:../../res/pop.mp3';
+// @ts-ignore
+import pop2Url from 'url:../../res/pop2.mp3';
+// @ts-ignore
+import shortCircuitUrl from 'url:../../res/short_circuit.mp3';
 
 export const R = {
   texture: {
@@ -34,6 +44,11 @@ export const R = {
   } as const,
   sound: {
     music: new Sound(musicUrl),
+    musicMenu: new Sound(musicMenuUrl),
+    box: new Sound(boxUrl),
+    pop: new Sound(popUrl),
+    pop2: new Sound(pop2Url),
+    shortCircuit: new Sound(shortCircuitUrl),
   } as const,
   color: {
     bg: Color.White,
