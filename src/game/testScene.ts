@@ -66,30 +66,43 @@ function isPaused() {
   return warehouseGlobals.game.timescale == 0.001;
 }
 
-async function newForklift() {
+async function newForklift(color?: Color) {
   setIsPaused(true);
   const { srBay, shelf } = await makeRouteScreen();
   const f = new Forklift({
     route: { srBay, shelf, path: Forklift.makePath(srBay, shelf) },
-    color:
-      [
-        Color.Red,
-        Color.Green.darken(0.2),
-        Color.Orange,
-        Color.Violet,
-        Color.Yellow,
-        Color.Cyan,
-        Color.DarkGray,
-        Color.Magenta,
-        Color.Rose,
-        Color.Azure,
-        Color.Viridian,
-        Color.Chartreuse,
-        Color.Gray,
-        Color.Blue,
-      ][warehouseGlobals.world.forklifts.length] ?? Color.Black,
+    color: color
+      ? color
+      : [
+          Color.Red,
+          Color.Green.darken(0.2),
+          Color.Orange,
+          Color.Violet,
+          Color.Yellow,
+          Color.Cyan,
+          Color.DarkGray,
+          Color.Magenta,
+          Color.Rose,
+          Color.Azure,
+          Color.Viridian,
+          Color.Chartreuse,
+          Color.Gray,
+          Color.Blue,
+        ][warehouseGlobals.world.forklifts.length] ?? Color.Black,
   });
   warehouseGlobals.world.forklifts.push(f);
+  f.on('pointerdown', e => {
+    if (e.target == f && !warehouseGlobals.ui.route) {
+      warehouseGlobals.world.forklifts.splice(
+        warehouseGlobals.world.forklifts.indexOf(f),
+        1,
+      );
+      f.off('pointerdown');
+      const c = f.color.clone();
+      f.kill();
+      newForklift(c);
+    }
+  });
   warehouseGlobals.game.add(f);
   setIsPaused(false);
 }
