@@ -27,8 +27,6 @@ type RouteRunner = Route & {
   direction: RouteDirection;
 };
 
-const forkliftSprite = new Sprite(R.texture.forklift, 0, 0, 8, 3);
-
 export class Forklift extends Actor {
   private item_?: Item;
   route: RouteRunner;
@@ -38,7 +36,7 @@ export class Forklift extends Actor {
       width: 8,
       height: 3,
       color: ctor.color, // will this tint textures? just need to store it to draw path lines
-      currentDrawing: forkliftSprite,
+      currentDrawing: new Sprite(R.texture.forklift, 0, 0, 8, 3)
     });
 
     // assignment for typescript to realized its initialized
