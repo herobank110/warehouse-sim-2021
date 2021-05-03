@@ -154,6 +154,7 @@ async function levelUp() {
   switch (upgrade) {
     case EUpgrade.srBay:
       unlockFirstNode(warehouseGlobals.world.srBays);
+      newForklift();
       break;
     case EUpgrade.shelf:
       unlockFirstNode(warehouseGlobals.world.shelves);
