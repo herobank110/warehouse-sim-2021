@@ -167,6 +167,7 @@ export class Truck extends Actor {
 
   private arrive(bay: SrBay, fn: () => void) {
     const bayPos = tilePos(bay.tile);
+    bayPos.y += 7;
     const begin = bayPos.clone();
     begin.x = 0; // start off screen
     const end = bayPos.add(vec(-4, 0));
@@ -175,6 +176,7 @@ export class Truck extends Actor {
 
   private depart(bay: SrBay) {
     const bayPos = tilePos(bay.tile);
+    bayPos.y += 7;
     const begin = bayPos.add(vec(-4, 0));
     const end = bayPos.clone();
     end.x = 0; // start off screen
